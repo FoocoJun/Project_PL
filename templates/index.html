@@ -16,16 +16,15 @@
                 data: {},
                 success: function (response) {
                     let rows = response['all_article']
-                    let users = response['all_users']
                     $('#article-list').empty()
                     $('#users-list').empty()
 
                     rows.sort(function (a, b) {
-                        // 스코어별로 오름차순 정렬
+                        // like별로 내림차순 정렬
                         if (a.like > b.like) return -1;
                         if (a.like < b.like) return 1;
 
-                        // 스코어 오름차순 정렬된 상태에서 우선순위별로 오름차순 정렬
+                        // like 오름차순 정렬된 상태에서 글번호 순으로 오름차순 정렬
                         if (a.num > b.num) return 1;
                         if (a.num < b.num) return -1;
                     });
@@ -34,10 +33,6 @@
                         let article = rows[i]['article']
                         let number = rows[i]['num']
                         let like = rows[i]['like']
-
-
-                        let tmp = [rows[i]['article'], rows[i]['num'], rows[i]['like']]
-                        console.log(tmp)
 
 
                         let temp_html =
@@ -52,17 +47,6 @@
 
                         $('#article-list').append(temp_html)
                     }
-                    for (i = 0; i < users.length; i++) {
-                        let nickname = users[i]['nickname']
-                        let liked = users[i]['liked']['articleNumber'].sort()
-                        let temp_html2 =
-                            `<li>
-                            <p>닉네임 : ${nickname}</p>
-                            <p>좋아한 글 번호 : ${liked}</p
-                        </li>`
-                        $('#users-list').append(temp_html2)
-                    }
-
 
                 }
 
@@ -73,10 +57,12 @@
 
         function post_article() {
             let article = $('#article').val()
+            let today = new Date();
+            let date = today.toLocaleString()
             $.ajax({
                 type: "POST",
                 url: "/team/write",
-                data: {article_give: article},
+                data: {article_give: article, date_give: date},
                 success: function (response) {
                     alert(response["msg"])
                     show_article();
@@ -121,9 +107,6 @@
 
 <div>
     <ul id="article-list">
-        <li>d</li>
-    </ul>
-    <ul id="users-list">
         <li>d</li>
     </ul>
 

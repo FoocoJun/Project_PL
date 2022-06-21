@@ -31,7 +31,7 @@ def home():
 @app.route("/team/write", methods=["POST"])
 def ariticle_post():
     article_receive = request.form['article_give']
-    # date_receive = request.form['date_give']
+    date_receive = request.form['date_give']
 
     all_article = list(db.articles.find({}, {'_id': False}))
     count = len(all_article) + 1
@@ -39,7 +39,7 @@ def ariticle_post():
     doc = {
         'num': count,
         'article': article_receive,
-        # 'date': date_receive,
+        'date': date_receive,
         'like': 0,
         'liked': [],
         'disliked': []
@@ -129,7 +129,6 @@ def article_dislike():
 @app.route("/team/read", methods=["GET"])
 def article_get():
     all_article = list(db.articles.find({}, {'_id': False}))
-    print(all_article)
     all_users = list(db.users.find({}, {'_id': False}))
     return jsonify({'all_article': all_article, 'all_users': all_users})
 
