@@ -31,7 +31,7 @@ def home():
 @app.route("/team/write", methods=["POST"])
 def ariticle_post():
     article_receive = request.form['article_give']
-    #date_receive = request.form['date_give']
+    # date_receive = request.form['date_give']
 
     all_article = list(db.articles.find({}, {'_id': False}))
     count = len(all_article) + 1
@@ -39,36 +39,99 @@ def ariticle_post():
     doc = {
         'num': count,
         'article': article_receive,
-        #'date': date_receive,
-        'like': 0
+        # 'date': date_receive,
+        'like': 0,
+        'liked': [],
+        'disliked': []
     }
 
     db.articles.insert_one(doc)
 
     return jsonify({'msg': '등록되었습니다.'})
 
+
+# 좋아요 싫어요 라디오 버튼식 구현
 @app.route("/team/write/likes", methods=["POST"])
 def article_like():
-
-    #유저마다 likes 데이터베이스 따로 만들어서 두번 좋아요 안되게 + 내가 좋아한 글 구현
-
     number_receive = request.form['number_give']
-    like = db.articles.find_one({'num': int(number_receive)})['like']
-    db.articles.update_one({'num':int(number_receive)},{'$set':{'like':like+1}})
-    return jsonify({'msg': '게시글에 좋아요를 눌렀습니다.'})
+    # 로그인 구현 전 닉네임 예시
+    userNickname = 'GICK'
+
+    # 게시글 번호(number_receive)에 따른 좋아요 명단
+    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+    # 게시글 번호(number_receive)에 따른 싫어요 명단
+    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+
+    if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없고
+        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+            # 좋아요 명단에 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+            # 좋아요 명단(liked) 다시 불러오기
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            # 좋아요 수(like) = 좋아요 명단-싫어요 명단
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 했습니다.'})
+
+        elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
+            # 좋아요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 취소했습니다.'})
+
+    elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있고
+        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+            # 싫어요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+
+            # 좋아요 명단에 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 했습니다.'})
+
 
 @app.route("/team/write/dislikes", methods=["POST"])
 def article_dislike():
+    # 로그인 구현 전 닉네임 예시
+    userNickname = 'GICK'
+
     number_receive = request.form['number_give']
-    like = db.articles.find_one({'num': int(number_receive)})['like']
-    db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': like-1}})
-    return jsonify({'msg': '게시글에 싫어요를 눌렀습니다.'})
+    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+    print(isdisliked)
+
+    if isliked.count(userNickname) == 0:    # 좋아요 명단에 이름(userNickname)이 없고
+        if isdisliked.count(userNickname) == 0:    # 싫어요 명단에 이름(userNickname)이 없으면
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 했습니다.'})
+        elif isdisliked.count(userNickname) == 1:   # 싫어요 명단에 이름(userNickname)이 있으면
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 취소했습니다.'})
+
+    elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름(userNickname)이 있고
+        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름이 없으면
+            # 좋아요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+            # 싫어요 명단에서 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 했습니다.'})
 
 
 @app.route("/team/read", methods=["GET"])
 def article_get():
     all_article = list(db.articles.find({}, {'_id': False}))
-    return jsonify({'all_article': all_article})
+    print(all_article)
+    all_users = list(db.users.find({}, {'_id': False}))
+    return jsonify({'all_article': all_article, 'all_users': all_users})
 
 
 if __name__ == '__main__':

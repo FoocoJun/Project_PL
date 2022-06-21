@@ -15,9 +15,20 @@
                 url: "/team/read",
                 data: {},
                 success: function (response) {
-                    console.log(response)
                     let rows = response['all_article']
+                    let users = response['all_users']
                     $('#article-list').empty()
+                    $('#users-list').empty()
+
+                    rows.sort(function (a, b) {
+                        // 스코어별로 오름차순 정렬
+                        if (a.like > b.like) return -1;
+                        if (a.like < b.like) return 1;
+
+                        // 스코어 오름차순 정렬된 상태에서 우선순위별로 오름차순 정렬
+                        if (a.num > b.num) return 1;
+                        if (a.num < b.num) return -1;
+                    });
 
                     for (i = 0; i < rows.length; i++) {
                         let article = rows[i]['article']
@@ -25,18 +36,31 @@
                         let like = rows[i]['like']
 
 
+                        let tmp = [rows[i]['article'], rows[i]['num'], rows[i]['like']]
+                        console.log(tmp)
+
+
                         let temp_html =
                             `<li>
-                            ${article},
-                            ${number},
-                            ${like}
-                            <button onClick="like_article(${number})" type="button">좋아요
+                                <p>글번호 : ${number} </p> <p>${article}</p> <p>인기도 : ${like}</p>
+                                <button onClick="like_article(${number})" type="button">좋아요
                                 </button>
-                            <button onClick="dislike_article(${number})" type="button">싫어요
+                                <button onClick="dislike_article(${number})" type="button">싫어요
                                 </button>
                             </li>`
 
+
                         $('#article-list').append(temp_html)
+                    }
+                    for (i = 0; i < users.length; i++) {
+                        let nickname = users[i]['nickname']
+                        let liked = users[i]['liked']['articleNumber'].sort()
+                        let temp_html2 =
+                            `<li>
+                            <p>닉네임 : ${nickname}</p>
+                            <p>좋아한 글 번호 : ${liked}</p
+                        </li>`
+                        $('#users-list').append(temp_html2)
                     }
 
 
@@ -87,11 +111,6 @@
         }
 
 
-
-
-
-
-
     </script>
 </head>
 <body>
@@ -102,6 +121,9 @@
 
 <div>
     <ul id="article-list">
+        <li>d</li>
+    </ul>
+    <ul id="users-list">
         <li>d</li>
     </ul>
 
