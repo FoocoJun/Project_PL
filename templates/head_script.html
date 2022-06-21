@@ -1,0 +1,33 @@
+<!-- jquery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+
+<script>
+
+    $(document).ready(function () {
+
+    });
+
+    //시즌 말 팀 목록 초기화
+    function teamlist_get() {
+        $.ajax({
+            type: "GET",
+            url: "/admin/teamlist",
+            data: {},
+            success: function (response) {
+                alert(response["msg"]);
+            }
+        })
+    }
+
+    function select_team(num) {
+        $.ajax({
+            type: "POST",
+            url: "/",
+            data: {number_give: num},
+            success: function (response) {
+                alert(response["msg"]);
+            }
+        });
+    }
+</script>

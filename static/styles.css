@@ -1,0 +1,136 @@
+h1 {
+    font-family: "Montserrat";
+    font-size: large;
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 1.5;
+    font-weight: 900;
+    width: 70%;
+}
+
+h2 {
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 1.5;
+}
+
+h3 {
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+p {
+    font-family: "Montserrat";
+}
+
+/*Team_Intro*/
+#team_intro {
+    background-color: #371B58;
+    padding: 3% 15%;
+
+}
+
+/* Navigation-Bar */
+.navbar {
+    background-color: #37003c;
+    height: 9%;
+}
+
+.navbar-brand {
+    font-family: "ubuntu";
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-align: right;
+    width: 15%;
+    height: 90%;
+    padding: 0 18px;
+}
+
+.nav-icon {
+    height: 100%;
+}
+
+.nav-item {
+    padding: 0 18px;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+    font-family: "Montserrat";
+}
+
+/* Navigation-Bar ^ */
+
+.team-intro {
+    padding: 8% 0 3% 0;
+}
+
+.logo-box {
+    display: inline;
+    text-align: center;
+}
+
+.teamlogo {
+    border-radius: 100%;
+    width: 100%;
+}
+
+
+.intro-box {
+    display: inline;
+    text-align: center;
+}
+
+.teamname {
+    color: white;
+    text-align: left;
+    width: 100%;
+}
+.button-box {
+    display: inline;
+}
+
+.page-link {
+    display: inline;
+    position: relative;
+    padding: 0% 3%;
+    border-radius: 100%;
+    text-decoration: none;
+}
+
+
+@media (max-width: 600px) {
+    .team-intro {
+        padding-top: 25%;
+    }
+
+    .teamlogo {
+        border-radius: 100%;
+        width: 80%;
+    }
+
+    .intro-box {
+        display: inline;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .teamname {
+        color: white;
+        text-align: center;
+        font-size: 2rem;
+        margin: auto;
+        width: 100%;
+
+    }
+}
+
+/*Team_Intro ^ */
+
+
+#team_notice {
+    height: 4500px;
+}
