@@ -154,6 +154,14 @@ p {
     background-color: #37003c;
     color: beige;
     height: 4500px;
+    display: none;
+}
+
+.team-news {
+    color: black;
+    margin: 0 auto;
+    padding: 5% 10%;
+
 }
 
 /*Team-News ^ */
@@ -163,8 +171,29 @@ p {
     background-color: #37003c;
     color: beige;
     height: 4500px;
-    display: none;
 
+}
+
+.mypost {
+    color: black;
+    margin: 0 auto;
+    padding: 5% 15%;
+}
+
+#article-list {
+    padding: 5% 15%;
+}
+
+#comment-list {
+    padding: 3%;
+}
+
+.article {
+    color: black;
+}
+
+.btn-notice {
+    margin-top: 10px;
 }
 
 /*Team-Notice ^*/
