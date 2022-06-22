@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
+<<<<<<< HEAD
 <<<<<<< Updated upstream
     <list default="true" id="6fb34da4-cbdd-4a6b-bafb-26abc54763b1" name="변경" comment="">
 =======
@@ -23,6 +24,19 @@
       <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
 >>>>>>> Team_notice
+=======
+    <list default="true" id="df15581e-2cf4-4a16-b3c0-425a07ca4a8e" name="변경" comment="">
+      <change afterPath="$PROJECT_DIR$/static/mystyle.css" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/profile_pics/profile_placeholder.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/static/프리미어리그_로고.png" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/login.html" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/templates/user.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/Project_PL.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/Project_PL.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app.py" beforeDir="false" afterPath="$PROJECT_DIR$/app.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/templates/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/templates/index.html" afterDir="false" />
+>>>>>>> origin/Main_signup
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,6 +77,7 @@
     <option name="showLibraryContents" value="true" />
   </component>
 <<<<<<< HEAD
+<<<<<<< HEAD
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
     &quot;DefaultHtmlFileTemplate&quot;: &quot;HTML File&quot;,
@@ -84,6 +99,22 @@
     "last_opened_file_path": "C:/Users/HJ/Documents/GitHub/Project_PL",
     "settings.editor.selected.configurable": "com.jetbrains.python.templateLanguages.PyTemplateLanguageModulesConfigurable"
   }
+=======
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "DefaultHtmlFileTemplate": "HTML File",
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "C:/Users/User/Documents/GitHub/Project_PL/static",
+    "list.type.of.created.stylesheet": "CSS",
+    "node.js.detected.package.eslint": "true",
+    "node.js.detected.package.tslint": "true",
+    "node.js.selected.package.eslint": "(autodetect)",
+    "node.js.selected.package.tslint": "(autodetect)",
+    "settings.editor.selected.configurable": "com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable"
+  }
+>>>>>>> origin/Main_signup
 }]]></component>
   <component name="RunManager">
 >>>>>>> Team_notice
@@ -147,6 +178,7 @@
       <updated>1655728292579</updated>
       <workItem from="1655728298304" duration="1633000" />
 <<<<<<< HEAD
+<<<<<<< HEAD
       <workItem from="1655799737312" duration="886000" />
       <workItem from="1655800642874" duration="29195000" />
       <workItem from="1655856592003" duration="14558000" />
@@ -155,6 +187,15 @@
       <workItem from="1655768968060" duration="23943000" />
       <workItem from="1655797283116" duration="1812000" />
 >>>>>>> Team_notice
+=======
+      <workItem from="1655884058245" duration="24000" />
+      <workItem from="1655884232765" duration="15000" />
+      <workItem from="1655884250283" duration="67000" />
+      <workItem from="1655884318664" duration="84000" />
+      <workItem from="1655884404455" duration="53000" />
+      <workItem from="1655884458626" duration="76000" />
+      <workItem from="1655884536511" duration="426000" />
+>>>>>>> origin/Main_signup
     </task>
     <servers />
   </component>
@@ -172,6 +213,7 @@
       </map>
     </option>
   </component>
+<<<<<<< HEAD
   <component name="com.intellij.coverage.CoverageDataManagerImpl">
 <<<<<<< Updated upstream
     <SUITE FILE_PATH="coverage/Project_PL$Project_PL.coverage" NAME="Project_PL 커버리지 결과" MODIFIED="1655898810251" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="" />
@@ -187,4 +229,6 @@
 >>>>>>> Team_notice
 >>>>>>> Stashed changes
   </component>
+=======
+>>>>>>> origin/Main_signup
 </project>
