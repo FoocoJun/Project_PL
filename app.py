@@ -14,18 +14,23 @@ from bs4 import BeautifulSoup
 
 
 @app.route('/')
+def home():
+    return render_template('index.html')
+
+@app.route('/team')
 def team_site():
     return render_template('team.html')
 
-#팀 사이트 랜더링
+
+# 팀 사이트 랜더링
 @app.route('/team/<teamtitle>')
 def team_temp(teamtitle):
-    #필요 자료형으로 치환 ('-' 제거 등)
+    # 필요 자료형으로 치환 ('-' 제거 등)
     teamtitle = str(teamtitle).replace('-', ' ')
-    #팀에 관한 db 불러오기
-    team=db.teams.find_one({'name':teamtitle})
+    # 팀에 관한 db 불러오기
+    team = db.teams.find_one({'name': teamtitle})
 
-    #팀 경기결과 불러오기
+    # 팀 경기결과 불러오기
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
     data = requests.get(team['bbc'], headers=headers)
@@ -61,12 +66,12 @@ def team_temp(teamtitle):
                            teamlogo=team['logo'],
                            teamname=team['name'],
                            teambbc=team['bbc'],
-                           #최근 경기 결과
+                           # 최근 경기 결과
                            blue_name=blue_name,
                            blue_score=blue_score,
                            red_name=red_name,
                            red_score=red_score,
-                           #다음 경기 계획
+                           # 다음 경기 계획
                            plan_blue_name=plan_blue_name,
                            plan_red_name=plan_red_name,
                            plan_month=plan_month,
@@ -76,15 +81,7 @@ def team_temp(teamtitle):
                            )
 
 
-
-
-
-
-
-
-
-
-#admin /시즌 말 팀 목록 초기화 크롤링
+# admin /시즌 말 팀 목록 초기화 크롤링
 @app.route("/admin/teamlist", methods=["GET"])
 def teamlist_get():
     headers = {
@@ -121,17 +118,124 @@ def teamlist_get():
                 team_logo = str(logo[0]).split('src="')[1].split('"')[0]
                 print(team_logo)
 
-                doc ={'name': team_name,
-                     'logo': team_logo,
-                     'insta':'',
-                     'fb':'',
-                     'official':'',
-                     'bbc': team_bbc,
-                     'namu':''}
+                doc = {'name': team_name,
+                       'logo': team_logo,
+                       'insta': '',
+                       'fb': '',
+                       'official': '',
+                       'bbc': team_bbc,
+                       'namu': ''}
                 db.teams.update_one(doc)
             except:
                 continue
     return jsonify({'msg': '팀목록 새로고침 완료'})
+
+
+@app.route("/team/<teamtitle>/write", methods=["POST"])
+def ariticle_post():
+    #글쓰기 기능 구현
+    article_receive = request.form['article_give']
+    date_receive = request.form['date_give']
+
+    all_article = list(db.articles.find({}, {'_id': False}))
+    count = len(all_article) + 1
+
+    doc = {
+        'num': count,
+        'article': article_receive,
+        'date': date_receive,
+        'like': 0,
+        'liked': [],
+        'disliked': []
+    }
+
+    db.articles.insert_one(doc)
+
+    return jsonify({'msg': '등록되었습니다.'})
+
+
+# 좋아요 싫어요 라디오 버튼식 구현
+@app.route("/team/<teamtitle>/write/likes", methods=["POST"])
+def article_like():
+    number_receive = request.form['number_give']
+    # 로그인 구현 전 닉네임 예시
+    userNickname = 'GICK'
+
+    # 게시글 번호(number_receive)에 따른 좋아요 명단
+    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+    # 게시글 번호(number_receive)에 따른 싫어요 명단
+    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+
+    if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없고
+        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+            # 좋아요 명단에 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+            # 좋아요 명단(liked) 다시 불러오기
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            # 좋아요 수(like) = 좋아요 명단-싫어요 명단
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 했습니다.'})
+
+        elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
+            # 좋아요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 취소했습니다.'})
+
+    elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있고
+        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+            # 싫어요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+
+            # 좋아요 명단에 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '좋아요를 했습니다.'})
+
+
+@app.route("/team/<teamtitle>/write/dislikes", methods=["POST"])
+def article_dislike():
+    # 로그인 구현 전 닉네임 예시
+    userNickname = 'GICK'
+
+    number_receive = request.form['number_give']
+    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+    print(isdisliked)
+
+    if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없고
+        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없으면
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 했습니다.'})
+        elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있으면
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 취소했습니다.'})
+
+    elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름(userNickname)이 있고
+        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름이 없으면
+            # 좋아요 명단에서 이름(userNickname) pull
+            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+            # 싫어요 명단에서 이름(userNickname) push
+            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+            return jsonify({'msg': '싫어요를 했습니다.'})
+
+
+@app.route("/team/<teamtitle>/read", methods=["GET"])
+def article_get():
+    #게시판 내용 표시
+    all_article = list(db.articles.find({}, {'_id': False}))
+    all_users = list(db.users.find({}, {'_id': False}))
+    return jsonify({'all_article': all_article, 'all_users': all_users})
 
 
 if __name__ == '__main__':

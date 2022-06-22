@@ -2,11 +2,115 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Team html</title>
+    <title>Title</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            show_article();
+        });
 
+        function show_article() {
+            $.ajax({
+                type: "GET",
+                url: "/team/read",
+                data: {},
+                success: function (response) {
+                    let rows = response['all_article']
+                    $('#article-list').empty()
+                    $('#users-list').empty()
+
+                    rows.sort(function (a, b) {
+                        // like별로 내림차순 정렬
+                        if (a.like > b.like) return -1;
+                        if (a.like < b.like) return 1;
+
+                        // like 오름차순 정렬된 상태에서 글번호 순으로 오름차순 정렬
+                        if (a.num > b.num) return 1;
+                        if (a.num < b.num) return -1;
+                    });
+
+                    for (i = 0; i < rows.length; i++) {
+                        let article = rows[i]['article']
+                        let number = rows[i]['num']
+                        let like = rows[i]['like']
+
+
+                        let temp_html =
+                            `<li>
+                                <p>글번호 : ${number} </p> <p>${article}</p> <p>인기도 : ${like}</p>
+                                <button onClick="like_article(${number})" type="button">좋아요
+                                </button>
+                                <button onClick="dislike_article(${number})" type="button">싫어요
+                                </button>
+                            </li>`
+
+
+                        $('#article-list').append(temp_html)
+                    }
+
+                }
+
+
+            });
+        }
+
+
+        function post_article() {
+            let article = $('#article').val()
+            let today = new Date();
+            let date = today.toLocaleString()
+            $.ajax({
+                type: "POST",
+                url: "/team/write",
+                data: {article_give: article, date_give: date},
+                success: function (response) {
+                    alert(response["msg"])
+                    show_article();
+                }
+            });
+        }
+
+        function like_article(num) {
+            $.ajax({
+                type: "POST",
+                url: "/team/write/likes",
+                data: {number_give: num},
+                success: function (response) {
+                    alert(response["msg"])
+                    show_article();
+
+                }
+            });
+        }
+
+        function dislike_article(num) {
+            $.ajax({
+                type: "POST",
+                url: "/team/write/dislikes",
+                data: {number_give: num},
+                success: function (response) {
+                    alert(response["msg"])
+                    show_article();
+
+                }
+            });
+        }
+
+
+    </script>
 </head>
 <body>
 <p>hello world!</p>
+
+<input type="text" id="article">
+<button type="submit" onclick="post_article()">등록하기</button>
+
+<div>
+    <ul id="article-list">
+        <li>d</li>
+    </ul>
+
+</div>
 
 </body>
 </html>
