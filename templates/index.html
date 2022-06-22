@@ -1,27 +1,122 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            show_article();
-        });
 
+<head>
+
+    <!-- Webpage Title -->
+    <title>Home | 프리미어리그 팀 선택</title>
+
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bulma CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
+    <!-- Font Awesome CSS -->
+    <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="{{ url_for('static', filename='mystyle.css') }}" rel="stylesheet">
+    <!-- JS -->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
+    <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+
+    <script>
     </script>
+
+    <style>
+        body {
+            background-color: RGBA(166, 80, 231, 0.76);
+            min-height: 100vh;
+        }
+    </style>
 </head>
 <body>
-<p>hello world!</p>
+<nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" href="/">
+            <img src="{{ url_for('static', filename='프리미어리그_로고.png') }}">
+            <strong
+                    style="font-family: 'Stylish', sans-serif;font-size: larger;color: rebeccapurple; margin-left: 10px">프리미어리그</strong>
+        </a>
+    </div>
+</nav>
 
-<input type="text" id="article">
-<button type="submit" onclick="post_article()">등록하기</button>
+<section class="section" style="height: 250px;">
+    <article class="media">
+        <figure class="media-left" style="align-self: center">
+            <a class="image is-128x128" href="/user/{{ user_info.username }}"
+               style="position: center; margin-left: 300px">
+                <img class="is-rounded"
+                     src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
+                <p style="margin-left: 10px; color: white; font-size: larger; margin-top: 20px">나의 프로필</p>
+            </a>
+        </figure>
 
-<div>
-    <ul id="article-list">
-        <li>d</li>
-    </ul>
+    </article>
+    </div>
 
+
+</section>
+<div class="columns is-multiline is-centered">
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/52e36bdf0591bab58f1d4f14d5f03b007b7dd842ddf8f82f655e461a8e10a6635f1147c84cd9464e505da40143798bc3878d305c5b599d6f4b35469623ab2224f7812b7451a069f7eac8cf4a89e5c4c7d45afd4dd30daf0d55044b00c5e38098"
+                class="card-img-top" alt="..."></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: red; margin-left: 30px; margin-top: 20px">맨체스터 유나이티드
+                FC</h5>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/74cef6dadf0f5c1bb3c1b2cdc7b4bd74fde660dfbe59bdc121fe00d9b2dd35d13385358aad8481d20138d72d4acefa1c5051832a196fe3b7f4d47e6be2cb9029df2c326aa4bf369398f476200032c25019ef4356e38f87066fd3f7ce252f2095"
+                class="card-img-top" alt="..."></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: deepskyblue; margin-left: 70px; margin-top: 20px">
+                맨체스터 시티 FC</h5>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/d097267d0b17fea7cce28d77fba847064e3a13638fade54bf12a128201325324cf33042a215b5dbd587068bc1d85876088ee36e331b21d6a7a7f4c06b13ee3ab60ff8de340eba269495cc3e751288134ba587a3cb2f136a6a31ceb852a8b86c3"
+                class="card-img-top" alt="..."></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: red; margin-left: 100px; margin-top: 20px">리버풀
+                FC</h5>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/e20e256395ce9decca169625bf9b5b417150112ea62c43f9d00aeb5b3a22d3631fbc8492533b0bb43a2cab002661acc028efe6509b70d150716b7a7e2d0a6dac5a1664d851a47bcd85f531f52f7bbf0f4f552d7a4e8e552fce1219732fcbb124"
+                class="card-img-top" alt="..."></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: red; margin-left: 100px; margin-top: 20px">아스날
+                FC</h5>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/3549f69f6bd3a8247c9857b4e99328ffabd456db7237013cc23ba08b9733ce3f87a2aee98b86cd07685e587f1d5378b8862e191786471d23f155297e7c92291fe397fadef68b1d21861631dc9d4666e355e76647b3898340a6f14888357f9d1c"
+                class="card-img-top" alt="..." style="margin-left: 40px"></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: blue; margin-left: 110px; margin-top: 20px">첼시
+                FC</h5>
+        </div>
+    </div>
+
+    <div class="card" style="width: 18rem;">
+        <a href="/team/"><img
+                src="https://w.namu.la/s/5d9930a1b31cf7f61aa946577044b0c761f09a709a138a2b2d0f3a926f81ab9e539881267ad82881b54137a717e959bf757fe8023008b999c585cdb20aa272525d1ebbc7232d848f7dbd66990a6e1030c6361ef6adfb909688e08571d5dd5c2c"
+                class="card-img-top" alt="..." style="margin-left: 80px"></a>
+        <div class="card-body">
+            <h5 class="card-title" style="font-size: larger; color: navy; margin-left: 70px; margin-top: 20px">토트넘 홋스퍼
+                FC</h5>
+        </div>
+    </div>
 </div>
 
 </body>
