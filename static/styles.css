@@ -3,6 +3,94 @@
     padding: 3% 15%;
 }
 
+/* login page */
+
+#main-title {
+    padding: 8% 0 3%;
+    text-align: center;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+.title {
+    font-weight: normal;
+    font-size: 5rem;
+    font-family: 'Black Han Sans', sans-serif;
+    margin: 0% auto;
+}
+
+.subtitle {
+    font-weight: lighter;
+    font-size: 2rem;
+    font-family: 'Black Han Sans', sans-serif;
+    margin: 0% auto;
+
+}
+
+#main-login {
+    background-color: #37003c;
+
+}
+
+.login-card {
+    padding: 3% 0;
+}
+
+.main-btn {
+    --bs-btn-color: #37003c;
+    --bs-btn-border-color: #37003c;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #37003c;
+    --bs-btn-hover-border-color: #37003c;
+
+}
+
+#link-box {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+
+.main-team-img {
+    width: 10%;
+    margin: 20px 0;
+
+}
+
+/* login page ^*/
+
+/* main page */
+.myProfile {
+    padding: 10% 0;
+    width: 35%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+.myName {
+    text-align: center;
+    padding-bottom:3%;
+    margin:0 auto;
+}
+.nameBox {
+    margin: 0 auto;
+}
+
+.main-intro {
+    background-color: #37003c;
+    color: beige;
+    padding: 10% 0;
+    width: 70%;
+    margin: 0 auto;
+}
+
+
+
+
 h1 {
     font-family: "Montserrat";
     font-size: large;
@@ -32,6 +120,10 @@ p {
     font-family: "Montserrat";
 }
 
+.hero-body {
+    padding: 5%;
+}
+
 /*Team-Intro*/
 #team-intro {
     background-color: #37003c;
@@ -44,9 +136,9 @@ p {
 }
 
 .navbar-brand {
-    font-family: "ubuntu";
-    font-size: 1.2rem;
-    font-weight: bold;
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 2rem;
+    font-weight: lighter;
     text-align: right;
     width: 15%;
     height: 90%;
@@ -198,11 +290,25 @@ p {
 
 /*Team-Notice ^*/
 
+
+
 /* Media */
 
 @media (max-width: 600px) {
     .padding_container {
         padding: 0;
+    }
+    .main-intro {
+        width: 100%;
+        padding: 25% 0;
+    }
+
+    #main-title {
+        padding-top: 25%;
+    }
+
+    .login-card {
+        padding: 15% 0;
     }
 
     .team-intro {
