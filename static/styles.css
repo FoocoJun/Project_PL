@@ -1,3 +1,8 @@
+.padding_container {
+    background-color: white;
+    padding: 3% 15%;
+}
+
 h1 {
     font-family: "Montserrat";
     font-size: large;
@@ -23,14 +28,13 @@ h3 {
 }
 
 p {
+    display: inline;
     font-family: "Montserrat";
 }
 
-/*Team_Intro*/
-#team_intro {
-    background-color: #371B58;
-    padding: 3% 15%;
-
+/*Team-Intro*/
+#team-intro {
+    background-color: #37003c;
 }
 
 /* Navigation-Bar */
@@ -65,7 +69,7 @@ p {
 /* Navigation-Bar ^ */
 
 .team-intro {
-    padding: 8% 0 3% 0;
+    padding: 12% 15% 5% 15%;
 }
 
 .logo-box {
@@ -89,6 +93,13 @@ p {
     text-align: left;
     width: 100%;
 }
+
+.button-list {
+    display: inline;
+    position: relative;
+    right: 20%;
+}
+
 .button-box {
     display: inline;
 }
@@ -96,15 +107,77 @@ p {
 .page-link {
     display: inline;
     position: relative;
-    padding: 0% 3%;
+    padding: 0% 2%;
     border-radius: 100%;
     text-decoration: none;
 }
 
+/*Team-Intro ^ */
+
+/*Team-Game*/
+#team-game {
+
+}
+
+.game {
+    display: inline;
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.game-team {
+    text-align: center;
+}
+
+.game-plan-date {
+
+}
+
+/*Team-Game ^ */
+
+/* Team-Tabbar */
+#team-tabbar {
+
+}
+
+.btn-group {
+    margin: 10px;
+}
+
+/* Team-Tabbar ^ */
+
+/*Team-News*/
+#team-news {
+    background-color: #37003c;
+    color: beige;
+    height: 4500px;
+}
+
+/*Team-News ^ */
+
+/*Team-Notice*/
+#team-notice {
+    background-color: #37003c;
+    color: beige;
+    height: 4500px;
+    display: none;
+
+}
+
+/*Team-Notice ^*/
+
+/* Media */
 
 @media (max-width: 600px) {
+    .padding_container {
+        padding: 0;
+    }
+
     .team-intro {
-        padding-top: 25%;
+        padding: 25%;
     }
 
     .teamlogo {
@@ -126,11 +199,10 @@ p {
         width: 100%;
 
     }
-}
 
-/*Team_Intro ^ */
+    .button-list {
+        display: inline;
+        position: static;
 
-
-#team_notice {
-    height: 4500px;
+    }
 }

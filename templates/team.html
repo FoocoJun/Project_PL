@@ -4,32 +4,35 @@
 <body>
 <!-- Nav Bar -->
 {% include 'navbar.html'%}
-
-<section id="team_intro">
-    <!-- header (team_logo,team_name atc...) -->
-    {% include 'header.html'%}
-</section>
-
-<section id="team_game">
-    {% include 'game.html'%}
-</section>
-
-<section id="team_news">
-    {% include 'news.html'%}
-</section>
-
-<section id="team_notice">
-    {% include 'notice.html'%}
-</section>
-
-{%block select_button%}
-<button onclick="window.location.href = '/team/leicester-city'">
-    <img src="https://ichef.bbci.co.uk/news/228/cpsprodpb/0f1a/live/ed75bd40-f52a-11eb-8617-87bebb01a75e.jpg"
-         alt="leicester-city">
-</button>
+<div class="padding_container">
 
 
-{% endblock %}
+    <section id="team-intro">
+        <!-- header (team_logo,team_name atc...) -->
+        {% include 'header.html'%}
+    </section>
+
+    <section id="team-game">
+        <!-- game (game_result,game_plan atc...) -->
+        {% include 'game.html'%}
+    </section>
+    <section id="team-tabbar">
+
+
+
+        {% include 'tabbar.html'%}
+    </section>
+
+    <section id="team-news">
+
+        {% include 'news.html'%}
+    </section>
+
+    <section id="team-notice">
+        {% include 'notice.html'%}
+    </section>
+</div>
+
 
 </body>
 </html>

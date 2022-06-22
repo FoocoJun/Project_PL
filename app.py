@@ -17,17 +17,62 @@ from bs4 import BeautifulSoup
 def team_site():
     return render_template('team.html')
 
-
+#팀 사이트 랜더링
 @app.route('/team/<teamtitle>')
 def team_temp(teamtitle):
-    #필요 자료형으로 치환
+    #필요 자료형으로 치환 ('-' 제거 등)
     teamtitle = str(teamtitle).replace('-', ' ')
+    #팀에 관한 db 불러오기
     team=db.teams.find_one({'name':teamtitle})
+
+    #팀 경기결과 불러오기
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+    data = requests.get(team['bbc'], headers=headers)
+    soup2 = BeautifulSoup(data.text, 'html.parser')
+
+    # 최근 경기 결과 / 다음 경기 정보
+    game_team = soup2.find_all(attrs={'class': 'eair9203'})
+    game_score = soup2.find_all(attrs={'class': 'eair9202'})
+    plan_schedule = soup2.find_all(attrs={'class': 'eo2yrsf2'})
+    # 업데이트 소요에 따라 for 구문 남겨둠
+    for x in [0]:
+        blue_name = game_team[x].text
+        blue_score = game_score[x].text
+    for x in [1]:
+        red_name = game_team[x].text
+        red_score = game_score[x].text
+    for x in [2]:
+        plan_blue_name = game_team[x].text
+    for x in [3]:
+        plan_red_name = game_team[x].text
+    for x in [0, 1, 2, 3]:
+        plan_time = plan_schedule[x].text.split('at')[1].split('on')[0]
+        plan_day = plan_schedule[x].text.split('on')[1][0:3]
+        plan_date = plan_schedule[x].text.split('on')[1].split(' ')[0][6:]
+        plan_month = plan_schedule[x].text.split('on')[1].split('of')[1]
+
+    # print('최근 경기:',blue_name, blue_score, ':', red_name, red_score)
+    # print('다음 경기:',plan_blue_name,':',plan_red_name)
+    # print('날짜:',plan_month,plan_date,plan_day,plan_time)
 
     return render_template('teamTemp.html',
                            teamtitle=teamtitle,
                            teamlogo=team['logo'],
-                           teamname=team['name']
+                           teamname=team['name'],
+                           teambbc=team['bbc'],
+                           #최근 경기 결과
+                           blue_name=blue_name,
+                           blue_score=blue_score,
+                           red_name=red_name,
+                           red_score=red_score,
+                           #다음 경기 계획
+                           plan_blue_name=plan_blue_name,
+                           plan_red_name=plan_red_name,
+                           plan_month=plan_month,
+                           plan_date=plan_date,
+                           plan_day=plan_day,
+                           plan_time=plan_time,
                            )
 
 

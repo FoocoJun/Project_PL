@@ -35,17 +35,32 @@ for name in names:
             team_logo = str(logo[0]).split('src="')[1].split('"')[0]
             # print(team_logo)
 
-            # 최근 경기 결과
+            # 최근 경기 결과 / 다음 경기 정보
             game_team = soup2.find_all(attrs={'class': 'eair9203'})
             game_score = soup2.find_all(attrs={'class': 'eair9202'})
+            plan_schedule = soup2.find_all(attrs={'class': 'eo2yrsf2'})
+            # 업데이트 소요에 따라 for 구문 남겨둠
             for x in [0]:
                 blue_name = game_team[x].text
                 blue_score = game_score[x].text
             for x in [1]:
                 red_name = game_team[x].text
                 red_score = game_score[x].text
+            for x in [2]:
+                plan_blue_name = game_team[x].text
+            for x in [3]:
+                plan_red_name = game_team[x].text
+            for x in [0]:
+                plan_game_time = plan_schedule[x].text
+                plan_time = plan_schedule[x].text.split('at')[1].split('on')[0]
+                plan_day = plan_schedule[x].text.split('on')[1][0:3]
+                plan_date = plan_schedule[x].text.split('on')[1].split(' ')[0][6:]
+                plan_month = plan_schedule[x].text.split('on')[1].split('of')[1]
+                print(plan_time,plan_day,plan_date,plan_month)
 
-            #print(blue_name, blue_score, ':', red_name, red_score)
+            print('최근 경기:', blue_name, blue_score, ':', red_name, red_score)
+            print('다음 경기:', plan_blue_name, ':', plan_red_name)
+            print('날짜:', plan_month, plan_date, plan_day, plan_time)
 
 
         except:
