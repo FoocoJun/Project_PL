@@ -1,24 +1,35 @@
-{% include 'head.html'%}
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+<head>
+
+    <meta charset="UTF-8">
+
+    <title>{{ teamtitle | upper }} Team Page</title>
+
+    {% include 'head.html' %}
+
+    {% include 'head_script.html' %}
+</head>
 
 
 <body>
 <!-- Nav Bar -->
-{% include 'navbar.html'%}
+{% include 'navbar.html' %}
 <div class="padding_container">
 
 
     <section id="team-intro">
         <!-- header (team_logo,team_name atc...) -->
-        {% include 'header.html'%}
+        {% include 'header.html' %}
     </section>
 
     <section id="team-game">
         <!-- game (game_result,game_plan atc...) -->
-        {% include 'game.html'%}
+        {% include 'game.html' %}
     </section>
     <section id="team-tabbar">
 
-        {% include 'tabbar.html'%}
+        {% include 'tabbar.html' %}
     </section>
 
     <section id="team-news">
@@ -60,12 +71,12 @@
         </div>
 
 
-        {% include 'news.html'%}
+        {% include 'news.html' %}
     </section>
 
     <section id="team-notice">
 
-        {% include 'notice.html'%}
+        {% include 'notice.html' %}
     </section>
 </div>
 

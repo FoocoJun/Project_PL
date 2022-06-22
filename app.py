@@ -2,7 +2,6 @@ from flask import Flask, render_template, request, jsonify, redirect, url_for
 from werkzeug.utils import secure_filename
 from datetime import datetime, timedelta
 import jwt
-import datetime
 import hashlib
 
 app: Flask = Flask(__name__)
@@ -25,6 +24,7 @@ SECRET_KEY = 'SPARTA'
 
 @app.route('/')
 def home():
+
     token_receive = request.cookies.get('mytoken')
     try:
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
@@ -39,8 +39,11 @@ def home():
 
 @app.route('/login')
 def login():
+    # 팀에 관한 db 불러오기
+    all_teams = list(db.teams.find({}, {'_id': False}))
+
     msg = request.args.get("msg")
-    return render_template('login.html', msg=msg)
+    return render_template('login.html', msg=msg, all_teams=all_teams)
 
 
 @app.route('/user/<username>')
@@ -56,6 +59,21 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+@app.route('/sign_up/save', methods=['POST'])
+def sign_up():
+    username_receive = request.form['username_give']
+    password_receive = request.form['password_give']
+    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
+    doc = {
+        "username": username_receive,  # 아이디
+        "password": password_hash,  # 비밀번호
+        "profile_name": username_receive,  # 프로필 이름 기본값은 아이디
+        "profile_pic": "",  # 프로필 사진 파일 이름
+        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
+        "profile_info": ""  # 프로필 한 마디
+    }
+    db.users.insert_one(doc)
+    return jsonify({'result': 'success'})
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -79,21 +97,7 @@ def sign_in():
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
 
 
-@app.route('/sign_up/save', methods=['POST'])
-def sign_up():
-    username_receive = request.form['username_give']
-    password_receive = request.form['password_give']
-    password_hash = hashlib.sha256(password_receive.encode('utf-8')).hexdigest()
-    doc = {
-        "username": username_receive,  # 아이디
-        "password": password_hash,  # 비밀번호
-        "profile_name": username_receive,  # 프로필 이름 기본값은 아이디
-        "profile_pic": "",  # 프로필 사진 파일 이름
-        "profile_pic_real": "profile_pics/profile_placeholder.png",  # 프로필 사진 기본 이미지
-        "profile_info": ""  # 프로필 한 마디
-    }
-    db.users.insert_one(doc)
-    return jsonify({'result': 'success'})
+
 
 
 @app.route('/sign_up/check_dup', methods=['POST'])
