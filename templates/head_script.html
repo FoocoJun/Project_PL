@@ -1,0 +1,256 @@
+<script>
+    $(document).ready(function () {
+        show_notice()
+        show_news()
+    });
+
+    // 게시글 불러오기
+    function show_notice() {
+        let team = window.location.href.split('team/')[1].split('/')[0]
+        $.ajax({
+            type: "GET",
+            url: "/team/read",
+            data: {},
+            success: function (response) {
+                let rows = response['all_article']
+                console.log(rows)
+                $('#article-list').empty()
+                $('#users-list').empty()
+
+                rows.sort(function (a, b) {
+                    // like별로 내림차순 정렬
+                    if (a.like > b.like) return -1;
+                    if (a.like < b.like) return 1;
+
+                    // like 오름차순 정렬된 상태에서 글번호 순으로 오름차순 정렬
+                    if (a.num > b.num) return 1;
+                    if (a.num < b.num) return -1;
+                });
+
+                for (i = 0; i < rows.length; i++) {
+                    // 현재 team 페이지에 해당하는 게시글인지
+                    if (rows[i]['team'] == team) {
+                        let article = rows[i]['article']
+                        let number = rows[i]['num']
+                        let like = rows[i]['like']
+                        let date = rows[i]['date']
+                        let username = rows[i]['username']
+
+                        let temp_html =
+                            `
+                        <div class="mycards col-md-6" id="comment-list">
+                        <h5>사용자명: ${username}</h5>
+                            <div class="card">
+                                <div class="card-body">
+                                    <blockquote class="blockquote mb-0">
+                                        <h3 class="article">${article}</h3>
+                                        <br>
+                                            <footer class="blockquote-footer">${date}</footer>
+                                    </blockquote>
+                                </div>
+                            </div>
+                            <p>글번호 : ${number} </p>
+                        <p>인기도 : ${like}</p>
+                        <button onClick="like_article(${number})" type="button">좋아요
+                        </button>
+                        <button onClick="dislike_article(${number})" type="button">싫어요
+                        </button>
+                        </div>`
+
+
+                        $('#article-list').append(temp_html)
+                    } else {
+                        continue;
+                    }
+                }
+
+            }
+
+
+        });
+    }
+
+    function show_news() {
+        let news_dict = {{ news_dict|safe }};
+        let teambbc = '{{ teambbc|safe }}';
+
+        for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
+            console.log(i);
+            {# 제목 #}
+            console.log(news_dict[i][0]);
+            {# 시간 #}
+            console.log(news_dict[i][1]);
+            {# 기사 #}
+            console.log(news_dict[i][2]);
+            {#기사 내용이 없으면 넘기기#}
+            if (news_dict[i].length == 2) {
+                continue
+            } else if (i % 2 == 0) {
+                if (news_dict[i][2].startsWith('https')) {
+                    console.log('이미지 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                    <div class="card" style="max-width: 540px; ">
+                        <div class="row g-0">
+                            <div class="col-md-12">
+                                <img src=${news_dict[i][2]} class="img-fluid rounded-start" alt="${news_dict[i][0]}">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h3 class="card-title">${news_dict[i][0]}</h3>
+                                    <br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>`
+                    $('#news-list-2').append(temp_html)
+                } else {
+                    console.log('정상 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">${news_dict[i][0]}</h3>
+                                <p class="card-text">${news_dict[i][2]}</p>
+                                <br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+                    $('#news-list-2').append(temp_html)
+                }
+
+            } else {
+                if (news_dict[i][2].startsWith('https')) {
+                    console.log('이미지 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                    <div class="card" style="max-width: 540px; ">
+                        <div class="row g-0">
+                            <div class="col-md-12">
+                                <img src=${news_dict[i][2]} class="img-fluid rounded-start" alt="${news_dict[i][0]}">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h3 class="card-title">${news_dict[i][0]}</h3>
+                                    <br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>`
+                    $('#news-list-1').append(temp_html)
+                } else {
+                    console.log('정상 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                        <div class="card">
+                            <div class="card-body">
+                                <h3 class="card-title">${news_dict[i][0]}</h3>
+                                <p class="card-text">${news_dict[i][2]}</p>
+                                <br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+                    $('#news-list-1').append(temp_html)
+                }
+            }
+        }
+    }
+
+    // 게시글 쓰기 #article
+    function post_article() {
+        let article = $('#article').val()
+        let today = new Date();
+        let date = today.toLocaleString()
+        let team = window.location.href.split('team/')[1].split('/')[0]
+
+        $.ajax({
+            type: "POST",
+            url: '/team/write',
+            data: {article_give: article, date_give: date, team_give: team},
+            success: function (response) {
+                alert(response["msg"])
+                show_notice();
+                $('#article').val('')
+
+            }
+        });
+    }
+
+    // 게시글 좋아요
+    function like_article(num) {
+        $.ajax({
+            type: "POST",
+            url: "/team/write/likes",
+            data: {number_give: num},
+            success: function (response) {
+                alert(response["msg"])
+                show_notice();
+
+            }
+        });
+    }
+
+    // 게시글 싫어요
+    function dislike_article(num) {
+        $.ajax({
+            type: "POST",
+            url: "/team/write/dislikes",
+            data: {number_give: num},
+            success: function (response) {
+                alert(response["msg"])
+                show_notice();
+
+            }
+        });
+    }
+
+    //ajax 양식
+    // function select_team(num)
+
+    //     $.ajax({
+    //         type: "POST",
+    //         url: "/",
+    //         data: {number_give: num},
+    //         success: function (response) {
+    //             alert(response["msg"]);
+    //         }
+    //     });
+    // }
+
+    // 팀 뉴스 게시판 라디오 버튼
+    function open_news() {
+        $('#team-notice').hide()
+        $('#team-news').show()
+    }
+
+    function open_notice() {
+        $('#team-news').hide()
+        $('#team-notice').show()
+    }
+
+    //시즌 말 팀 목록 초기화
+    function teamlist_get() {
+        $.ajax({
+            type: "GET",
+            url: "/admin/teamlist",
+            data: {},
+            success: function (response) {
+                alert(response["msg"]);
+            }
+        })
+    }
+
+
+</script>

@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <!-- Webpage Title -->
+    <title>Home | 프리미어리그 팀 선택</title>
+
+    {% include 'head.html' %}
+
+    <script>
+        $(document).ready(function () {
+            load_list()
+        });
+        {% include 'linkbar_script.html' %}
+
+    </script>
+
+
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+
+<div class="row main-intro">
+    <h1 class="myName">{{ user_info.username }}</h1><br>
+    <div class="col-md-4 nameBox">
+        <p align="center">
+            <a class="image is-128x128" href="/user/{{ user_info.username }}">
+                <img class="is-rounded"
+                     src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
+                <button>프로필 관리</button>
+            </a>
+        </p>
+    </div>
+
+</div>
+
+
+{% include 'linkbar.html' %}
+
+
+</body>
+</html>

@@ -1,0 +1,351 @@
+.padding_container {
+    background-color: white;
+    padding: 3% 15% 0% 15%;
+}
+
+/* login page */
+
+#main-title {
+    padding: 8% 0 3%;
+    text-align: center;
+
+}
+
+a {
+    text-decoration: none;
+}
+
+.title {
+    font-weight: normal;
+    font-size: 5rem;
+    font-family: 'Black Han Sans', sans-serif;
+    margin: 0% auto;
+}
+
+.subtitle {
+    font-weight: lighter;
+    font-size: 2rem;
+    font-family: 'Black Han Sans', sans-serif;
+    margin: 0% auto;
+
+}
+
+#main-login {
+    background-color: #37003c;
+
+}
+
+.login-card {
+    padding: 3% 0;
+}
+
+.main-btn {
+    --bs-btn-color: #37003c;
+    --bs-btn-border-color: #37003c;
+    --bs-btn-hover-color: #fff;
+    --bs-btn-hover-bg: #37003c;
+    --bs-btn-hover-border-color: #37003c;
+
+}
+
+#link-box {
+    width: 70%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+
+.main-team-img {
+    width: 10%;
+    margin: 20px 0;
+
+}
+
+/* login page ^*/
+
+/* main page */
+.myProfile {
+    padding: 10% 0;
+    width: 35%;
+    margin: 0 auto;
+    text-align: center;
+
+}
+.myName {
+    text-align: center;
+    padding-bottom: 3%;
+    margin: 0 auto;
+}
+.nameBox {
+    margin: 0 auto;
+}
+
+.main-intro {
+    background-color: #37003c;
+    color: beige;
+    padding: 10% 0;
+    width: 70%;
+    margin: 0 auto;
+}
+
+
+
+
+h1 {
+    font-family: "Montserrat";
+    font-size: large;
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 1.5;
+    font-weight: 900;
+    width: 70%;
+}
+
+h2 {
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 3rem;
+    line-height: 1.5;
+}
+
+h3 {
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 1.5rem;
+    margin: 0;
+}
+
+p {
+    display: inline;
+    font-family: "Montserrat";
+}
+
+.hero-body {
+    padding: 5%;
+}
+
+/*Team-Intro*/
+#team-intro {
+    background-color: #37003c;
+}
+
+/* Navigation-Bar */
+.navbar {
+    background-color: #37003c;
+    height: 9%;
+}
+
+.navbar-brand {
+    font-family: 'Black Han Sans', sans-serif;
+    font-size: 2rem;
+    font-weight: lighter;
+    text-align: right;
+    width: 15%;
+    height: 90%;
+    padding: 0 18px;
+}
+
+.nav-icon {
+    height: 100%;
+}
+
+.nav-item {
+    padding: 0 18px;
+}
+
+.nav-link {
+    font-size: 1.2rem;
+    font-family: "Montserrat";
+}
+
+/* Navigation-Bar ^ */
+
+.team-intro {
+    padding: 12% 15% 5% 15%;
+}
+
+.logo-box {
+    display: inline;
+    text-align: center;
+}
+
+.teamlogo {
+    border-radius: 100%;
+    width: 100%;
+}
+
+
+.intro-box {
+    display: inline;
+    text-align: center;
+}
+
+.teamname {
+    color: white;
+    text-align: left;
+    width: 100%;
+}
+
+.button-list {
+    display: inline;
+    position: relative;
+    right: 20%;
+}
+
+.button-box {
+    display: inline;
+}
+
+.page-link {
+    display: inline;
+    position: relative;
+    padding: 0% 2%;
+    border-radius: 100%;
+    text-decoration: none;
+}
+
+/*Team-Intro ^ */
+
+/*Team-Game*/
+#team-game {
+
+}
+
+.game {
+    display: inline;
+    font-family: "Montserrat";
+    font-weight: bold;
+    font-size: 1.5rem;
+    text-align: center;
+    padding: 20px;
+}
+
+.game-team {
+    text-align: center;
+}
+
+.game-plan-date {
+
+}
+
+/*Team-Game ^ */
+
+/* Team-Tabbar */
+#team-tabbar {
+
+}
+
+.btn-group {
+    margin: 10px;
+}
+
+/* Team-Tabbar ^ */
+
+/*Team-News*/
+#team-news {
+    background-color: #37003c;
+    color: beige;
+    display: none;
+}
+
+#news-list {
+    margin: 0 auto;
+    text-align: center;
+}
+
+.team-news {
+    color: black;
+    margin: 0 auto;
+    padding: 5% 10%;
+
+}
+.news-box {
+    padding: 3%;
+    margin: 0 auto;
+    text-align: left;
+}
+
+/*Team-News ^ */
+
+/*Team-Notice*/
+#team-notice {
+    background-color: #37003c;
+    color: beige;
+
+}
+
+.mypost {
+    color: black;
+    margin: 0 auto;
+    padding: 5% 15%;
+}
+
+#article-list {
+    padding: 5% 15%;
+}
+
+#comment-list {
+    padding: 3%;
+}
+
+.article {
+    color: black;
+}
+
+.btn-notice {
+    margin-top: 10px;
+}
+
+/*Team-Notice ^*/
+
+
+
+/* Media */
+
+@media (max-width: 600px) {
+    .padding_container {
+        padding: 0;
+    }
+    .main-intro {
+        width: 100%;
+        padding: 25% 0;
+    }
+
+    #main-title {
+        padding-top: 25%;
+    }
+
+    .login-card {
+        padding: 15% 0;
+    }
+
+    .team-intro {
+        padding: 25%;
+    }
+
+    .teamlogo {
+        border-radius: 100%;
+        width: 80%;
+    }
+
+    .intro-box {
+        display: inline;
+        text-align: center;
+        padding-top: 10%;
+    }
+
+    .teamname {
+        color: white;
+        text-align: center;
+        font-size: 2rem;
+        margin: auto;
+        width: 100%;
+
+    }
+
+    .button-list {
+        display: inline;
+        position: static;
+
+    }
+}

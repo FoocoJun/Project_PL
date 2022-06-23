@@ -1,0 +1,30 @@
+<div class="row ">
+    <div class="col-md-6 result-box game game-result">
+        최근 경기
+        <br>
+
+        <div class="game game-team">
+            {{blue_name}} <p>{{blue_score}}</p>
+        </div>
+        <br>
+        <div class="game game-team">
+            {{red_name}} <p>{{red_score}}</p>
+        </div>
+    </div>
+    <div class="col-md-6 cardplan-box game game-plan">
+        다음 경기
+        <br>
+        <div class="game game-plan-date">
+            {{plan_date}}{{plan_month}}
+            {{plan_day}}{{plan_time}} <span style="font-size: .5rem">현지시간</span>
+        </div>
+
+        <br>
+        <div class="game game-team">
+            {{plan_blue_name}} : {{plan_red_name}}
+
+        </div>
+
+
+    </div>
+</div>
