@@ -61,6 +61,7 @@ def user(username):
     except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home"))
 
+
 @app.route('/sign_up/save', methods=['POST'])
 def sign_up():
     username_receive = request.form['username_give']
@@ -76,6 +77,7 @@ def sign_up():
     }
     db.users.insert_one(doc)
     return jsonify({'result': 'success'})
+
 
 @app.route('/sign_in', methods=['POST'])
 def sign_in():
@@ -97,9 +99,6 @@ def sign_in():
     # 찾지 못하면
     else:
         return jsonify({'result': 'fail', 'msg': '아이디/비밀번호가 일치하지 않습니다.'})
-
-
-
 
 
 @app.route('/sign_up/check_dup', methods=['POST'])
@@ -135,8 +134,6 @@ def save_img():
         return redirect(url_for("home"))
 
 
-
-
 @app.route('/team')
 def team_site():
     return render_template('team.html')
@@ -150,7 +147,7 @@ def team_temp(teamtitle):
 
     # 팀에 관한 db 불러오기
     team = db.teams.find_one({'name': teamtitle})
-    if team: # 주소가 올바른 팀 이름이면(데이터베이스에 있는 팀 이름이면!)
+    if team:  # 주소가 올바른 팀 이름이면(데이터베이스에 있는 팀 이름이면!)
         # 팀 경기결과 불러오기
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
@@ -181,6 +178,58 @@ def team_temp(teamtitle):
         # print('최근 경기:',blue_name, blue_score, ':', red_name, red_score)
         # print('다음 경기:',plan_blue_name,':',plan_red_name)
         # print('날짜:',plan_month,plan_date,plan_day,plan_time)
+        ### 뉴스 크롤링
+
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        # 테스트 시 'https://www.bbc.com/sport/football/teams/afc-bournemouth' 이용
+        data = requests.get(team['bbc'], headers=headers)
+        soup3 = BeautifulSoup(data.text, 'html.parser')
+        # 뉴스 요약(첫문단,사진) 크롤링
+        tmp = soup3.select(
+            '#main-content > div:nth-child(1) > div.ssrcss-1ocoo3l-Wrap.e42f8511 > div.ssrcss-gfrs6h-StackWrapper.e1d6xluq1 > ol > li')
+
+        # 뉴스 제목 및 게시일 크롤링
+        team_news = soup3.find_all(attrs={'class': 'e6wdqbx0', 'class': 'e14e9ror0'})
+
+        # 카운트 및 dict 선언
+        count = 0
+        news_dict = {}
+
+        for x in team_news:
+            count = count + 1
+            # 제목이 게시일이랑 붙어있어서 찢는 과정
+            news_title = x.text[:x.text.find('published at ')]
+            news_date = x.text[x.text.find('published at '):]
+            news_dict[count] = [news_title, news_date]
+
+        # 카운트 초기화
+        count = 0
+
+        for y in tmp:
+            # 글이 p tag로 이루어진 경우
+            if y.select_one('article > p'):
+                news_summ = y.select_one('article > p').text
+                count = count + 1
+                news_dict[count].append(news_summ)
+            # 글이 li tag로 이루어진 경우
+            elif y.select_one('article > ul > li'):
+                news_summ = y.select_one('p').text
+                count = count + 1
+                news_dict[count].append(news_summ)
+
+            # 글이 img tag로 이루어진 경우
+            elif y.select_one('article > figure > div > span > img'):
+                news_summ = y.select_one('article > figure > div > span > img').get('src')
+                count = count + 1
+                news_dict[count].append(news_summ)
+            else:
+                continue
+
+        print(news_dict)
+
+
+
 
         return render_template('teamTemp.html',
                                teamtitle=teamtitle,
@@ -199,10 +248,12 @@ def team_temp(teamtitle):
                                plan_date=plan_date,
                                plan_day=plan_day,
                                plan_time=plan_time,
+                               #뉴스 정보
+                               # 팀 뉴스
+                               news_dict=news_dict
                                )
     else:
         return jsonify({'msg': '올바르지 않은 접근방식입니다.'})
-
 
 
 @app.route("/team/read", methods=["GET"])
@@ -247,8 +298,6 @@ def ariticle_post():
         return jsonify({'msg': "글 작성은 로그인을 해야합니다."})
 
 
-
-
 # 좋아요 / 싫어요 라디오 버튼식 구현 (좋아요)
 @app.route("/team/write/likes", methods=["POST"])
 def article_like():
@@ -273,7 +322,7 @@ def article_like():
                 isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
                 # 좋아요 수(like) = 좋아요 명단-싫어요 명단
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return ('', 204) #브라우저에 아무런 응답도 하지 않는 방법
+                return ('', 204)  # 브라우저에 아무런 응답도 하지 않는 방법
 
             elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
                 # 좋아요 명단에서 이름(userNickname) pull
@@ -304,7 +353,6 @@ def article_dislike():
     try:  # 로그인되어 있으면
         payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
         userNickname = payload['id']
-
 
         number_receive = request.form['number_give']
         isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
@@ -385,8 +433,6 @@ def teamlist_get():
             except:
                 continue
     return jsonify({'msg': '팀목록 새로고침 완료'})
-
-
 
 
 if __name__ == '__main__':

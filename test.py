@@ -26,8 +26,8 @@ from bs4 import BeautifulSoup
 #             headers = {
 #                 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 #             data = requests.get(team_bbc, headers=headers)
-#             soup2 = BeautifulSoup(data.text, 'html.parser')
-#             logo = soup2.select(
+#             soup3 = BeautifulSoup(data.text, 'html.parser')
+#             logo = soup3.select(
 #                 '#main-content > div:nth-child(1) > div.ssrcss-1hdgz05-TopicHeaderWrapper.e1mh12xb4 > div > div > div > div > span > img'
 #             )
 #
@@ -36,10 +36,10 @@ from bs4 import BeautifulSoup
 #             # print(team_logo)
 #
 #             ## 최근 경기 결과 / 다음 경기 정보
-#             # game_team = soup2.find_all(attrs={'class': 'eair9203'})
-#             # game_score = soup2.find_all(attrs={'class': 'eair9202'})
-#             # plan_schedule = soup2.find_all(attrs={'class': 'eo2yrsf2'})
-#             team_news = soup2.find_all(attrs={'class': 'e6wdqbx0','class':'e14e9ror0'})
+#             # game_team = soup3.find_all(attrs={'class': 'eair9203'})
+#             # game_score = soup3.find_all(attrs={'class': 'eair9202'})
+#             # plan_schedule = soup3.find_all(attrs={'class': 'eo2yrsf2'})
+#             team_news = soup3.find_all(attrs={'class': 'e6wdqbx0','class':'e14e9ror0'})
 #             print(team_news)
 #
 #
@@ -76,13 +76,13 @@ headers = {
     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
 # 테스트 시 'https://www.bbc.com/sport/football/teams/afc-bournemouth' 이용
 data = requests.get(team_bbc, headers=headers)
-soup2 = BeautifulSoup(data.text, 'html.parser')
+soup3 = BeautifulSoup(data.text, 'html.parser')
 # 뉴스 요약(첫문단,사진) 크롤링
-tmp = soup2.select(
+tmp = soup3.select(
     '#main-content > div:nth-child(1) > div.ssrcss-1ocoo3l-Wrap.e42f8511 > div.ssrcss-gfrs6h-StackWrapper.e1d6xluq1 > ol > li')
 
 # 뉴스 제목 및 게시일 크롤링
-team_news = soup2.find_all(attrs={'class': 'e6wdqbx0', 'class': 'e14e9ror0'})
+team_news = soup3.find_all(attrs={'class': 'e6wdqbx0', 'class': 'e14e9ror0'})
 
 # 카운트 및 dict 선언
 count = 0
