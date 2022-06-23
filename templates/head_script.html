@@ -1,7 +1,6 @@
-
+<script>
     $(document).ready(function () {
         show_notice()
-        show_news()
     });
 
     // 게시글 불러오기
@@ -59,28 +58,11 @@
                         </div>`
 
 
-
                         $('#article-list').append(temp_html)
                     } else {
                         continue;
                     }
                 }
-
-            }
-
-
-        });
-    }
-
-    function show_news() {
-        let team = window.location.href.split('team/')[1].split('/')[0]
-        console.log(team)
-        $.ajax({
-            type: "GET",
-            url: "/news/read",
-            data: {'team':team},
-            success: function (response) {
-
 
             }
 
@@ -173,3 +155,4 @@
     }
 
 
+</script>
