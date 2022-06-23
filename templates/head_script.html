@@ -1,13 +1,12 @@
 <script>
     $(document).ready(function () {
         show_notice()
-        console.log({{ news_dict |safe }})
+        show_news()
     });
 
     // 게시글 불러오기
     function show_notice() {
         let team = window.location.href.split('team/')[1].split('/')[0]
-        console.log(team)
         $.ajax({
             type: "GET",
             url: "/team/read",
@@ -69,6 +68,107 @@
 
 
         });
+    }
+
+    function show_news() {
+        let news_dict = {{ news_dict|safe }}
+            console.log(news_dict)
+        for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
+            console.log(i)
+            {# 제목 #}
+            console.log(news_dict[i][0]);
+            {# 시간 #}
+            console.log(news_dict[i][1]);
+            {# 기사 #}
+            console.log(news_dict[i][2]);
+            {#기사 내용이 없으면 넘기기#}
+            if (news_dict[i].length == 2) {
+                continue
+            } else if (i % 2 == 0) {
+                if (news_dict[i][2].startsWith('https')) {
+                    console.log('이미지 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                    <div class="card" style="max-width: 540px; ">
+                        <div class="row g-0">
+                            <div class="col-md-12">
+                                <img src=${news_dict[i][2]} class="img-fluid rounded-start" alt="${news_dict[i][0]}">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h5 class="card-title">${news_dict[i][0]}</h5>
+                                    <br><br>
+                                    <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>`
+                    $('#news-list-1').append(temp_html)
+                } else {
+                    console.log('정상 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">${news_dict[i][0]}</h5>
+                                <p class="card-text">${news_dict[i][2]}</p>
+                                <br><br>
+                                <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+                    $('#news-list-1').append(temp_html)
+                }
+
+            } else {
+                if (news_dict[i][2].startsWith('https')) {
+                    console.log('이미지 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                    <div class="card" style="max-width: 540px; ">
+                        <div class="row g-0">
+                            <div class="col-md-12">
+                                <img src=${news_dict[i][2]} class="img-fluid rounded-start" alt="${news_dict[i][0]}">
+                            </div>
+                            <div class="col-md-12">
+                                <div class="card-body">
+                                    <h5 class="card-title">${news_dict[i][0]}</h5>
+                                    <br><br>
+                                    <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </div>`
+                    $('#news-list-2').append(temp_html)
+                } else {
+                    console.log('정상 기사입니다.')
+                    temp_html = `
+                    <div class="news-box">
+                        <div class="card">
+                            <div class="card-body">
+                                <h5 class="card-title">${news_dict[i][0]}</h5>
+                                <p class="card-text">${news_dict[i][2]}</p>
+                                <br><br>
+                                <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
+                            </div>
+                        </div>
+                    </div>
+                `
+                    $('#news-list-2').append(temp_html)
+                }
+            }
+
+
+        }
+
+
     }
 
     // 게시글 쓰기 #article
