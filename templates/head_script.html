@@ -48,19 +48,15 @@
                                             <div class="vote"
                                                  style="text-align: center; width: 30px; display: inline-block; margin: auto 0;">
                                                 <button onClick="like_article(${number})" type="button">
-                                                    <img
-                                                        src="https://s-lol-web.op.gg/images/icon/icon-up.svg?v=1655962714367"
-                                                        width="24" alt="up" ht="24">
+                                                    ∧
                                                 </button>
-                                                <div class="likes" style="width: 30px; padding: auto 0;">${like}</div>
+                                                <div class="likes" style="width: 30px;">${like}</div>
                                                 <button onClick="dislike_article(${number})" type="button">
-                                                    <img
-                                                        src="https://s-lol-web.op.gg/images/icon/icon-down.svg?v=1655962714367"
-                                                        width="24" alt="up" height="24">
+                                                    ∨
                                                 </button>
                                             </div>
                                             <blockquote class="blockquote mb-0"
-                                                        style="width:80%; padding-left:20px; display: inline-block">
+                                                        style="width:85%; padding-left:20px; display: inline-block">
                                                 <h3 class="article">${article}</h3>
                                                 <br>
                                                     <footer class="blockquote-footer article-date">${date}</footer>
@@ -71,37 +67,36 @@
                                 <p>글번호 : ${number} </p>`
 
 
-                                $('#article-list').append(temp_html)
-                                } else {
-                                continue;
-                            }
-                                }
+                        $('#article-list').append(temp_html)
+                    } else {
+                        continue;
+                    }
+                }
 
-                                }
+            }
 
 
-                                });
-                                }
+        });
+    }
 
-                                function show_news() {
-                                let news_dict = {{ news_dict|safe }};
-                                let teambbc = '{{ teambbc|safe }}';
+    function show_news() {
+        let news_dict = {{ news_dict|safe }};
+        let teambbc = '{{ teambbc|safe }}';
 
-                                for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
-                                console.log(i);
-                                {# 제목 #}
-                                console.log(news_dict[i][0]);
-                                {# 시간 #}
-                                console.log(news_dict[i][1]);
-                                {# 기사 #}
-                                console.log(news_dict[i][2]);
-                                {#기사 내용이 없으면 넘기기#}
-                                if (news_dict[i].length == 2) {
-                                continue
-                            } else if (i % 2 == 0) {
-                                if (news_dict[i][2].startsWith('https')) {
-                                console.log('이미지 기사입니다.')
-                                temp_html = `
+        for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
+            {#console.log(i);#}
+            {# 제목 #}
+            {#console.log(news_dict[i][0]);#}
+            {# 시간 #}
+            {#console.log(news_dict[i][1]);#}
+            {# 기사 #}
+            {#console.log(news_dict[i][2]);#}
+            {#기사 내용이 없으면 넘기기#}
+            if (news_dict[i].length == 2) {
+                continue
+            } else if (i % 2 == 0) {
+                if (news_dict[i][2].startsWith('https')) {
+                    temp_html = `
                     <div class="news-box">
                     <div class="card" style="max-width: 540px; ">
                         <div class="row g-0">
@@ -119,10 +114,9 @@
                         </div>
                     </div>
                     </div>`
-                                $('#news-list-2').append(temp_html)
-                            } else {
-                                console.log('정상 기사입니다.')
-                                temp_html = `
+                    $('#news-list-2').append(temp_html)
+                } else {
+                    temp_html = `
                     <div class="news-box">
                         <div class="card">
                             <div class="card-body">
@@ -135,13 +129,12 @@
                         </div>
                     </div>
                 `
-                                $('#news-list-2').append(temp_html)
-                            }
+                    $('#news-list-2').append(temp_html)
+                }
 
-                            } else {
-                                if (news_dict[i][2].startsWith('https')) {
-                                console.log('이미지 기사입니다.')
-                                temp_html = `
+            } else {
+                if (news_dict[i][2].startsWith('https')) {
+                    temp_html = `
                     <div class="news-box">
                     <div class="card" style="max-width: 540px; ">
                         <div class="row g-0">
@@ -159,10 +152,9 @@
                         </div>
                     </div>
                     </div>`
-                                $('#news-list-1').append(temp_html)
-                            } else {
-                                console.log('정상 기사입니다.')
-                                temp_html = `
+                    $('#news-list-1').append(temp_html)
+                } else {
+                    temp_html = `
                     <div class="news-box">
                         <div class="card">
                             <div class="card-body">
@@ -175,95 +167,95 @@
                         </div>
                     </div>
                 `
-                                $('#news-list-1').append(temp_html)
-                            }
-                            }
-                            }
-                            }
+                    $('#news-list-1').append(temp_html)
+                }
+            }
+        }
+    }
 
-                                // 게시글 쓰기 #article
-                                function post_article() {
-                                let article = $('#article').val()
-                                let today = new Date();
-                                let date = today.toLocaleString()
-                                let team = window.location.href.split('team/')[1].split('/')[0]
+    // 게시글 쓰기 #article
+    function post_article() {
+        let article = $('#article').val()
+        let today = new Date();
+        let date = today.toLocaleString()
+        let team = window.location.href.split('team/')[1].split('/')[0]
 
-                                $.ajax({
-                                type: "POST",
-                                url: '/team/write',
-                                data: {article_give: article, date_give: date, team_give: team},
-                                success: function (response) {
-                                alert(response["msg"])
-                                show_notice();
-                                $('#article').val('')
+        $.ajax({
+            type: "POST",
+            url: '/team/write',
+            data: {article_give: article, date_give: date, team_give: team},
+            success: function (response) {
+                alert(response["msg"])
+                show_notice();
+                $('#article').val('')
 
-                            }
-                            });
-                            }
+            }
+        });
+    }
 
-                                // 게시글 좋아요
-                                function like_article(num) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/team/write/likes",
-                                    data: {number_give: num},
-                                    success: function (response) {
-                                        alert(response["msg"])
-                                        show_notice();
+    // 게시글 좋아요
+    function like_article(num) {
+        $.ajax({
+            type: "POST",
+            url: "/team/write/likes",
+            data: {number_give: num},
+            success: function (response) {
 
-                                    }
-                                });
-                            }
+                show_notice();
 
-                                // 게시글 싫어요
-                                function dislike_article(num) {
-                                $.ajax({
-                                    type: "POST",
-                                    url: "/team/write/dislikes",
-                                    data: {number_give: num},
-                                    success: function (response) {
-                                        alert(response["msg"])
-                                        show_notice();
+            }
+        });
+    }
 
-                                    }
-                                });
-                            }
+    // 게시글 싫어요
+    function dislike_article(num) {
+        $.ajax({
+            type: "POST",
+            url: "/team/write/dislikes",
+            data: {number_give: num},
+            success: function (response) {
 
-                                //ajax 양식
-                                // function select_team(num)
+                show_notice();
 
-                                // $.ajax({
-                                //         type: "POST",
-                                //         url: "/",
-                                //         data: {number_give: num},
-                                //         success: function (response) {
-                                //             alert(response["msg"]);
-                                //         }
-                                //     });
-                                // }
+            }
+        });
+    }
 
-                                // 팀 뉴스 게시판 라디오 버튼
-                                function open_news() {
-                                    $('#team-notice').hide()
-                                    $('#team-news').show()
-                                }
+    //ajax 양식
+    // function select_team(num)
 
-                                function open_notice() {
-                                $('#team-news').hide()
-                                $('#team-notice').show()
-                            }
+    // $.ajax({
+    //         type: "POST",
+    //         url: "/",
+    //         data: {number_give: num},
+    //         success: function (response) {
+    //             alert(response["msg"]);
+    //         }
+    //     });
+    // }
 
-                                //시즌 말 팀 목록 초기화
-                                function teamlist_get() {
-                                $.ajax({
-                                type: "GET",
-                                url: "/admin/teamlist",
-                                data: {},
-                                success: function (response) {
-                                alert(response["msg"]);
-                            }
-                            })
-                            }
+    // 팀 뉴스 게시판 라디오 버튼
+    function open_news() {
+        $('#team-notice').hide()
+        $('#team-news').show()
+    }
+
+    function open_notice() {
+        $('#team-news').hide()
+        $('#team-notice').show()
+    }
+
+    //시즌 말 팀 목록 초기화
+    function teamlist_get() {
+        $.ajax({
+            type: "GET",
+            url: "/admin/teamlist",
+            data: {},
+            success: function (response) {
+                alert(response["msg"]);
+            }
+        })
+    }
 
 
 </script>
