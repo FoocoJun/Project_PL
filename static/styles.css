@@ -1,6 +1,6 @@
 .padding_container {
     background-color: white;
-    padding: 3% 15%;
+    padding: 3% 15% 0% 15%;
 }
 
 /* login page */
@@ -71,11 +71,13 @@ a {
     text-align: center;
 
 }
+
 .myName {
     text-align: center;
-    padding-bottom:3%;
-    margin:0 auto;
+    padding-bottom: 3%;
+    margin: 0 auto;
 }
+
 .nameBox {
     margin: 0 auto;
 }
@@ -87,8 +89,6 @@ a {
     width: 70%;
     margin: 0 auto;
 }
-
-
 
 
 h1 {
@@ -245,15 +245,24 @@ p {
 #team-news {
     background-color: #37003c;
     color: beige;
-    height: 4500px;
     display: none;
+}
+
+#news-list {
+    margin: 0 auto;
+    text-align: center;
 }
 
 .team-news {
     color: black;
     margin: 0 auto;
     padding: 5% 10%;
+}
 
+.news-box {
+    padding: 3%;
+    margin: 0 auto;
+    text-align: left;
 }
 
 /*Team-News ^ */
@@ -262,7 +271,6 @@ p {
 #team-notice {
     background-color: #37003c;
     color: beige;
-    height: 4500px;
 
 }
 
@@ -291,13 +299,13 @@ p {
 /*Team-Notice ^*/
 
 
-
 /* Media */
 
 @media (max-width: 600px) {
     .padding_container {
         padding: 0;
     }
+
     .main-intro {
         width: 100%;
         padding: 25% 0;

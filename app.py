@@ -150,7 +150,7 @@ def team_temp(teamtitle):
 
     # 팀에 관한 db 불러오기
     team = db.teams.find_one({'name': teamtitle})
-    if team:
+    if team: # 주소가 올바른 팀 이름이면(데이터베이스에 있는 팀 이름이면!)
         # 팀 경기결과 불러오기
         headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
@@ -178,9 +178,53 @@ def team_temp(teamtitle):
             plan_date = plan_schedule[x].text.split('on')[1].split(' ')[0][6:]
             plan_month = plan_schedule[x].text.split('on')[1].split('of')[1]
 
-        # print('최근 경기:',blue_name, blue_score, ':', red_name, red_score)
-        # print('다음 경기:',plan_blue_name,':',plan_red_name)
-        # print('날짜:',plan_month,plan_date,plan_day,plan_time)
+
+        ## 해당 팀 news 크롤링 하기
+        headers = {
+            'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64)AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36'}
+        # 테스트 시 'https://www.bbc.com/sport/football/teams/afc-bournemouth' 이용
+        data = requests.get(team['bbc'], headers=headers)
+        soup2 = BeautifulSoup(data.text, 'html.parser')
+        # 뉴스 요약(첫문단,사진) 크롤링
+        tmp = soup2.select(
+            '#main-content > div:nth-child(1) > div.ssrcss-1ocoo3l-Wrap.e42f8511 > div.ssrcss-gfrs6h-StackWrapper.e1d6xluq1 > ol > li')
+
+        # 뉴스 제목 및 게시일 크롤링
+        team_news = soup2.find_all(attrs={'class': 'e6wdqbx0', 'class': 'e14e9ror0'})
+
+        # 카운트 및 dict 선언
+        count = 0
+        news_dict = {}
+
+        for x in team_news:
+            count = count + 1
+            # 제목이 게시일이랑 붙어있어서 찢는 과정
+            news_title = x.text[:x.text.find('published at ')]
+            news_date = x.text[x.text.find('published at '):]
+            news_dict[count] = [news_title, news_date]
+
+        # 카운트 초기화
+        count = 0
+
+        for y in tmp:
+            # 글이 p tag로 이루어진 경우
+            if y.select_one('article > p'):
+                news_summ = y.select_one('article > p').text
+                news_dict[count].append(news_summ)
+            # 글이 li tag로 이루어진 경우
+            elif y.select_one('article > ul > li'):
+                news_summ = y.select_one('p').text
+                news_dict[count].append(news_summ)
+
+            # 글이 img tag로 이루어진 경우
+            elif y.select_one('article > figure > div > span > img'):
+                news_summ = y.select_one('article > figure > div > span > img').get('src')
+                news_dict[count].append(news_summ)
+            else:
+                continue
+            count = count + 1
+
+        # print(news_dict)
 
         return render_template('teamTemp.html',
                                teamtitle=teamtitle,
@@ -199,6 +243,8 @@ def team_temp(teamtitle):
                                plan_date=plan_date,
                                plan_day=plan_day,
                                plan_time=plan_time,
+                               # 팀 뉴스
+                               news_dict=news_dict
                                )
     else:
         return jsonify({'msg': '올바르지 않은 접근방식입니다.'})
@@ -251,7 +297,7 @@ def ariticle_post():
         db.articles.insert_one(doc)
         return jsonify({'msg': '등록되었습니다.'})
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return jsonify({'msg': "로그인을 해야합니다."})
+        return jsonify({'msg': "글 작성은 로그인을 해야합니다."})
 
 
 
@@ -280,14 +326,14 @@ def article_like():
                 isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
                 # 좋아요 수(like) = 좋아요 명단-싫어요 명단
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '좋아요를 했습니다.'})
+                return ('', 204) #브라우저에 아무런 응답도 하지 않는 방법
 
             elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
                 # 좋아요 명단에서 이름(userNickname) pull
                 db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
                 isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '좋아요를 취소했습니다.'})
+                return ('', 204)
 
         elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있고
             if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
@@ -299,7 +345,8 @@ def article_like():
                 isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
                 isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '좋아요를 했습니다.'})
+                return ('', 204)
+
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home", msg="로그인을 해야합니다."))
 
@@ -323,12 +370,12 @@ def article_dislike():
                 db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
                 isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '싫어요를 했습니다.'})
+                return ('', 204)
             elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있으면
                 db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
                 isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '싫어요를 취소했습니다.'})
+                return ('', 204)
 
         elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름(userNickname)이 있고
             if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름이 없으면
@@ -339,7 +386,7 @@ def article_dislike():
                 isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
                 isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
                 db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-                return jsonify({'msg': '싫어요를 했습니다.'})
+                return ('', 204)
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return redirect(url_for("home", msg="로그인을 해야합니다."))
 

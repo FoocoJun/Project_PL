@@ -1,43 +1,40 @@
-function load_list() {
-            $('#link-bar').empty()
-            let all_teams =
-            {{ all_teams|safe }}
-            for (i = 0; i < all_teams.length; i++) {
-                let link_team_name = all_teams[i]['name']
-                let link_team_logo = all_teams[i]['logo']
 
-                if (i >=0 &&i<5) {
-                    console.log(i, '시작~')
-                    temp_html =
-                        `<a href="/team/${link_team_name}">
+    function load_list() {
+        $('#link-bar').empty()
+        let all_teams =
+        {{ all_teams|safe }}
+        for (i = 0; i < all_teams.length; i++) {
+            let link_team_name = all_teams[i]['name']
+            let link_team_logo = all_teams[i]['logo']
+
+            if (i >= 0 && i < 5) {
+                temp_html =
+                    `<a href="/team/${link_team_name}">
                                 <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
                             </a>`
-                    $('#carousel_0').append(temp_html)
+                $('#carousel_0').append(temp_html)
 
-                } else if (i>=5 && i<10) {
-                    console.log(i, 'finish!')
-                    temp_html =
-                        `<a href="/team/${link_team_name}">
+            } else if (i >= 5 && i < 10) {
+                temp_html =
+                    `<a href="/team/${link_team_name}">
                                 <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
                             </a>`
-                    $('#carousel_1').append(temp_html)
+                $('#carousel_1').append(temp_html)
 
-                } else if (i>=15 && i<20) {
-                    console.log(i, '6번째!')
-                    temp_html =
-                        `<a href="/team/${link_team_name}">
+            } else if (i >= 15 && i < 20) {
+                temp_html =
+                    `<a href="/team/${link_team_name}">
                                 <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
                             </a>`
-                    $('#carousel_2').append(temp_html)
-                } else {
-                    console.log('중간중간')
-                    temp_html =
-                        `<a href="/team/${link_team_name}">
+                $('#carousel_2').append(temp_html)
+            } else {
+                temp_html =
+                    `<a href="/team/${link_team_name}">
                                 <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
                             </a>`
-                    $('#carousel_3').append(temp_html)
-                }
-
-
+                $('#carousel_3').append(temp_html)
             }
+
+
         }
+    }
