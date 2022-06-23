@@ -1,6 +1,6 @@
 .padding_container {
     background-color: white;
-    padding: 3% 15%;
+    padding: 3% 15% 0% 15%;
 }
 
 /* login page */
@@ -73,8 +73,8 @@ a {
 }
 .myName {
     text-align: center;
-    padding-bottom:3%;
-    margin:0 auto;
+    padding-bottom: 3%;
+    margin: 0 auto;
 }
 .nameBox {
     margin: 0 auto;
@@ -245,8 +245,12 @@ p {
 #team-news {
     background-color: #37003c;
     color: beige;
-    height: 4500px;
     display: none;
+}
+
+#news-list {
+    margin: 0 auto;
+    text-align: center;
 }
 
 .team-news {
@@ -255,6 +259,11 @@ p {
     padding: 5% 10%;
 
 }
+.news-box {
+    padding: 3%;
+    margin: 0 auto;
+    text-align: left;
+}
 
 /*Team-News ^ */
 
@@ -262,7 +271,6 @@ p {
 #team-notice {
     background-color: #37003c;
     color: beige;
-    height: 4500px;
 
 }
 
