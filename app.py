@@ -248,7 +248,6 @@ def team_temp(teamtitle):
                                plan_date=plan_date,
                                plan_day=plan_day,
                                plan_time=plan_time,
-                               #뉴스 정보
                                # 팀 뉴스
                                news_dict=news_dict
                                )

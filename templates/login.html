@@ -155,8 +155,44 @@
             });
         }
 
-        {#팀링크 리스트를 불러옵니다.#}
-        {% include 'linkbar_script.html' %}
+        function load_list() {
+            $('#link-bar').empty()
+            let all_teams = {{ all_teams|safe }};
+            for (i = 0; i < all_teams.length; i++) {
+                let link_team_name = all_teams[i]['name']
+                let link_team_logo = all_teams[i]['logo']
+
+                if (i >= 0 && i < 5) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_0').append(temp_html)
+
+                } else if (i >= 5 && i < 10) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_1').append(temp_html)
+
+                } else if (i >= 15 && i < 20) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_2').append(temp_html)
+                } else {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_3').append(temp_html)
+                }
+
+
+            }
+        }
 
 
     </script>
@@ -251,9 +287,37 @@
     </div>
 </section>
 
-{#팀 링크 스크롤#}
-{% include 'linkbar.html' %}
+<section id="link-box">
+    <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" id="carousel_0">
 
+            </div>
+            <div class="carousel-item" id="carousel_1">
+
+            </div>
+            <div class="carousel-item" id="carousel_2">
+
+            </div>
+            <div class="carousel-item" id="carousel_3">
+
+            </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+
+</section>
 
 </body>
 </html>
