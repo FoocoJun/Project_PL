@@ -227,7 +227,6 @@ def team_temp(teamtitle):
             else:
                 continue
 
-        print(news_dict)
 
 
 
@@ -278,23 +277,26 @@ def ariticle_post():
         date_receive = request.form['date_give']
         team_receive = request.form['team_give']
         # print(team_receive)
+        if not article_receive:
+            return jsonify({'msg': '내용을 입력하세요.'})
 
-        all_article = list(db.articles.find({}, {'_id': False}))
-        count = len(all_article) + 1
+        else:
+            all_article = list(db.articles.find({}, {'_id': False}))
+            count = len(all_article) + 1
 
-        doc = {
-            'num': count,
-            'username': userNickname,
-            'team': team_receive,
-            'article': article_receive,
-            'date': date_receive,
-            'like': 0,
-            'liked': [],
-            'disliked': []
-        }
+            doc = {
+                'num': count,
+                'username': userNickname,
+                'team': team_receive,
+                'article': article_receive,
+                'date': date_receive,
+                'like': 0,
+                'liked': [],
+                'disliked': []
+            }
 
-        db.articles.insert_one(doc)
-        return jsonify({'msg': '등록되었습니다.'})
+            db.articles.insert_one(doc)
+            return jsonify({'msg': '등록되었습니다.'})
     except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
         return jsonify({'msg': "글 작성은 로그인을 해야합니다."})
 
