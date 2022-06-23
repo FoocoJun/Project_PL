@@ -1,101 +1,77 @@
 <!doctype html>
 <html lang="en">
-    <head>
+<head>
 
-        <!-- Webpage Title -->
-        <title>{{ user_info.name }} | 프로필 및 로그아웃 </title>
+    <!-- Webpage Title -->
+    <title>{{ user_info.name }} | 프로필 및 로그아웃 </title>
 
-        <!-- Required meta tags -->
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-
-        <!-- Bulma CSS -->
-        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.1/css/bulma.min.css">
-        <!-- Font Awesome CSS -->
-        <link href="//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
-        <link href="{{ url_for('static', filename='style.css') }}" rel="stylesheet">
-
-        <!-- JS -->
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-cookie/1.4.1/jquery.cookie.js"></script>
-        <script src="{{ url_for('static', filename='myjs.js') }}"></script>
+    {% include 'head.html' %}
 
 
-        <script>
-            function sign_out() {
-                $.removeCookie('mytoken', {path: '/'});
-                alert('로그아웃!')
-                window.location.href = "/login"
-            }
+    <script>
+        function sign_out() {
+            $.removeCookie('mytoken', {path: '/'});
+            alert('로그아웃!')
+            window.location.href = "/login"
+        }
 
-            function update_profile() {
-                let name = $('#input-name').val()
-                let file = $('#input-pic')[0].files[0]
-                let about = $("#textarea-about").val()
-                let form_data = new FormData()
-                form_data.append("file_give", file)
-                form_data.append("name_give", name)
-                form_data.append("about_give", about)
-                console.log(name, file, about, form_data)
+        function update_profile() {
+            let name = $('#input-name').val()
+            let file = $('#input-pic')[0].files[0]
+            let about = $("#textarea-about").val()
+            let form_data = new FormData()
+            form_data.append("file_give", file)
+            form_data.append("name_give", name)
+            form_data.append("about_give", about)
+            console.log(name, file, about, form_data)
 
-                $.ajax({
-                    type: "POST",
-                    url: "/update_profile",
-                    data: form_data,
-                    cache: false,
-                    contentType: false,
-                    processData: false,
-                    success: function (response) {
-                        if (response["result"] == "success") {
-                            alert(response["msg"])
-                            window.location.reload()
+            $.ajax({
+                type: "POST",
+                url: "/update_profile",
+                data: form_data,
+                cache: false,
+                contentType: false,
+                processData: false,
+                success: function (response) {
+                    if (response["result"] == "success") {
+                        alert(response["msg"])
+                        window.location.reload()
 
-                        }
                     }
-                });
-            }
-        </script>
+                }
+            });
+        }
+    </script>
 
-        <style>
-             body {
-                background-color: RGBA(166, 80, 231, 0.76);
-                min-height: 100vh;
-            }
-        </style>
+    <style>
 
-    </head>
-    <body class="has-navbar-fixed-top">
-    <nav class="navbar is-fixed-top is-white" role="navigation" aria-label="main navigation">
-        <div class="navbar-brand">
-            <a class="navbar-item" href="/">
-                <img src="{{ url_for('static', filename='프리미어리그_로고.png') }}">
-                <strong class
-                        style="font-family: 'Stylish', sans-serif;font-size: larger; color: rebeccapurple; margin-left: 10px">프리미어리그</strong>
-            </a>
-        </div>
-    </nav>
-    <section class="hero is-white">
-        <div class="hero-body" style="padding-bottom:1rem;margin:auto;min-width: 400px">
-            <article class="media">
+    </style>
 
-                <figure class="media-left" style="align-self: center">
-                    <a class="image is-96x96" href="#">
-                        <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
-                    </a>
-                </figure>
-                <div class="media-content">
-                    <div class="content">
-                        <p>
-                            <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>
-                            <br>
-                            {{ user_info.profile_info }}
-                        </p>
-                    </div>
+</head>
+<body class="has-navbar-fixed-top">
+{% include 'navbar.html' %}
 
+<section class="hero is-white">
+    <div class="hero-body" style="margin:auto;min-width: 400px">
+        <article class="media">
+            <figure class="media-left" style="align-self: center">
+                <a class="image is-96x96" href="#">
+                    <img class="is-rounded" src="{{ url_for('static', filename=user_info.profile_pic_real) }}">
+                </a>
+            </figure>
+            <div class="media-content">
+                <div class="content">
+                    <p>
+                        <strong>{{ user_info.profile_name }}</strong> <small>@{{ user_info.username }}</small>
+                        <br>
+                        {{ user_info.profile_info }}
+                    </p>
                 </div>
-            </article>
-            {% if status %}
-                <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
+
+            </div>
+        </article>
+        {% if status %}
+            <nav id="btns-me" class="level is-mobile" style="margin-top:2rem">
                 <a class="button level-item has-text-centered is-sparta" aria-label="edit"
                    onclick='$("#modal-edit").addClass("is-active")'>
                     프로필 수정&nbsp;&nbsp;&nbsp;<span class="icon is-small"><i class="fa fa-pencil"
@@ -108,7 +84,7 @@
                                                                          aria-hidden="true"></i></span>
                 </a>
             </nav>
-                <div class="modal" id="modal-edit">
+            <div class="modal" id="modal-edit">
                 <div class="modal-background" onclick='$("#modal-edit").removeClass("is-active")'></div>
                 <div class="modal-content">
                     <div class="box">
@@ -125,7 +101,6 @@
                                 </div>
                                 <div class="field">
                                     <label class="label" for="input-pic">프로필 사진</label>
-
                                     <div class="control is-expanded">
                                         <div class="file has-name">
                                             <label class="file-label" style="width:100%">
@@ -172,12 +147,12 @@
                 <button class="modal-close is-large" aria-label="close"
                         onclick='$("#modal-edit").removeClass("is-active")'></button>
             </div>
-            {% endif %}
-        </div>
-    </section>
-    {% if status %}
+        {% endif %}
+    </div>
+</section>
+{% if status %}
 
-    {% endif %}
+{% endif %}
 
-    </body>
+</body>
 </html>

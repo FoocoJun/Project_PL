@@ -67,15 +67,18 @@
 
 <div class="row main-intro">
     <h1 class="myName">{{ user_info.username }}</h1><br>
-    <div class="col-md-4 nameBox">
-        <p align="center">
-            <a class="image is-128x128" href="/user/{{ user_info.username }}">
-                <img class="is-rounded"
-                     src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
-                <button>프로필 관리</button>
-            </a>
-        </p>
+    <div>
+        <a class="profile-img image is-128x128" href="/user/{{ user_info.username }}">
+            <img class="is-rounded"
+                 src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
+            <br>
+            <div style="margin: 0 auto; text-align: center">
+                <button class="btn btn-secondary" style="margin: 3% auto;">프로필 관리</button>
+            </div>
+        </a>
     </div>
+    <br>
+
 
 </div>
 
