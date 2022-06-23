@@ -135,26 +135,6 @@ def save_img():
         return redirect(url_for("home"))
 
 
-@app.route('/posting', methods=['POST'])
-def posting():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅하기
-        return jsonify({"result": "success", 'msg': '포스팅 성공'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
-
-
-@app.route("/get_posts", methods=['GET'])
-def get_posts():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 포스팅 목록 받아오기
-        return jsonify({"result": "success", "msg": "포스팅을 가져왔습니다."})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
 
 
 @app.route('/team')
@@ -242,109 +222,126 @@ def article_get():
 
 @app.route("/team/write", methods=["POST"])
 def ariticle_post():
-    # 로그인 구현 전 닉네임 예시
-    userNickname = 'GICK'
+    #쿠키에서 로그인 토큰을 받아온다.
+    token_receive = request.cookies.get('mytoken')
+    try: #로그인되어 있으면
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userNickname = payload['id']
 
-    # 글쓰기 기능 구현
-    article_receive = request.form['article_give']
-    date_receive = request.form['date_give']
-    team_receive = request.form['team_give']
-    print(team_receive)
+        # 글쓰기 기능 구현
+        article_receive = request.form['article_give']
+        date_receive = request.form['date_give']
+        team_receive = request.form['team_give']
+        # print(team_receive)
 
-    all_article = list(db.articles.find({}, {'_id': False}))
-    count = len(all_article) + 1
+        all_article = list(db.articles.find({}, {'_id': False}))
+        count = len(all_article) + 1
 
-    doc = {
-        'num': count,
-        'username': userNickname,
-        'team': team_receive,
-        'article': article_receive,
-        'date': date_receive,
-        'like': 0,
-        'liked': [],
-        'disliked': []
-    }
+        doc = {
+            'num': count,
+            'username': userNickname,
+            'team': team_receive,
+            'article': article_receive,
+            'date': date_receive,
+            'like': 0,
+            'liked': [],
+            'disliked': []
+        }
 
-    db.articles.insert_one(doc)
+        db.articles.insert_one(doc)
+        return jsonify({'msg': '등록되었습니다.'})
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return jsonify({'msg': "로그인을 해야합니다."})
 
-    return jsonify({'msg': '등록되었습니다.'})
 
 
-# 좋아요 싫어요 라디오 버튼식 구현
+
+# 좋아요 / 싫어요 라디오 버튼식 구현 (좋아요)
 @app.route("/team/write/likes", methods=["POST"])
 def article_like():
-    number_receive = request.form['number_give']
-    # 로그인 구현 전 닉네임 예시
-    userNickname = 'GICK'
+    # 쿠키에서 로그인 토큰을 받아온다.
+    token_receive = request.cookies.get('mytoken')
+    try:  # 로그인되어 있으면
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userNickname = payload['id']
 
-    # 게시글 번호(number_receive)에 따른 좋아요 명단
-    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-    # 게시글 번호(number_receive)에 따른 싫어요 명단
-    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+        number_receive = request.form['number_give']
 
-    if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없고
-        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
-            # 좋아요 명단에 이름(userNickname) push
-            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
-            # 좋아요 명단(liked) 다시 불러오기
-            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-            # 좋아요 수(like) = 좋아요 명단-싫어요 명단
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '좋아요를 했습니다.'})
+        # 게시글 번호(number_receive)에 따른 좋아요 명단
+        isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+        # 게시글 번호(number_receive)에 따른 싫어요 명단
+        isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
 
-        elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
-            # 좋아요 명단에서 이름(userNickname) pull
-            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
-            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '좋아요를 취소했습니다.'})
+        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없고
+            if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+                # 좋아요 명단에 이름(userNickname) push
+                db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+                # 좋아요 명단(liked) 다시 불러오기
+                isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+                # 좋아요 수(like) = 좋아요 명단-싫어요 명단
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '좋아요를 했습니다.'})
 
-    elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있고
-        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
-            # 싫어요 명단에서 이름(userNickname) pull
-            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+            elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름이 있으면
+                # 좋아요 명단에서 이름(userNickname) pull
+                db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+                isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '좋아요를 취소했습니다.'})
 
-            # 좋아요 명단에 이름(userNickname) push
-            db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
-            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '좋아요를 했습니다.'})
+        elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있고
+            if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없으면
+                # 싫어요 명단에서 이름(userNickname) pull
+                db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+
+                # 좋아요 명단에 이름(userNickname) push
+                db.articles.update_one({'num': int(number_receive)}, {'$push': {'liked': userNickname}})
+                isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+                isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '좋아요를 했습니다.'})
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home", msg="로그인을 해야합니다."))
 
 
-# 좋아요 싫어요 라디오 버튼식 구현
+# 좋아요 / 싫어요 라디오 버튼식 구현 (싫어요)
 @app.route("/team/write/dislikes", methods=["POST"])
 def article_dislike():
-    # 로그인 구현 전 닉네임 예시
-    userNickname = 'GICK'
+    token_receive = request.cookies.get('mytoken')
+    try:  # 로그인되어 있으면
+        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
+        userNickname = payload['id']
 
-    number_receive = request.form['number_give']
-    isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-    isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
-    print(isdisliked)
 
-    if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없고
-        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없으면
-            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
-            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '싫어요를 했습니다.'})
-        elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있으면
-            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
-            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '싫어요를 취소했습니다.'})
+        number_receive = request.form['number_give']
+        isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+        isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+        print(isdisliked)
 
-    elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름(userNickname)이 있고
-        if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름이 없으면
-            # 좋아요 명단에서 이름(userNickname) pull
-            db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
-            # 싫어요 명단에서 이름(userNickname) push
-            db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
-            isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
-            isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
-            db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
-            return jsonify({'msg': '싫어요를 했습니다.'})
+        if isliked.count(userNickname) == 0:  # 좋아요 명단에 이름(userNickname)이 없고
+            if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름(userNickname)이 없으면
+                db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+                isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '싫어요를 했습니다.'})
+            elif isdisliked.count(userNickname) == 1:  # 싫어요 명단에 이름(userNickname)이 있으면
+                db.articles.update_one({'num': int(number_receive)}, {'$pull': {'disliked': userNickname}})
+                isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '싫어요를 취소했습니다.'})
+
+        elif isliked.count(userNickname) == 1:  # 좋아요 명단에 이름(userNickname)이 있고
+            if isdisliked.count(userNickname) == 0:  # 싫어요 명단에 이름이 없으면
+                # 좋아요 명단에서 이름(userNickname) pull
+                db.articles.update_one({'num': int(number_receive)}, {'$pull': {'liked': userNickname}})
+                # 싫어요 명단에서 이름(userNickname) push
+                db.articles.update_one({'num': int(number_receive)}, {'$push': {'disliked': userNickname}})
+                isliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['liked']
+                isdisliked = db.articles.find_one({'num': int(number_receive)}, {'_id': False})['disliked']
+                db.articles.update_one({'num': int(number_receive)}, {'$set': {'like': len(isliked) - len(isdisliked)}})
+                return jsonify({'msg': '싫어요를 했습니다.'})
+    except(jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
+        return redirect(url_for("home", msg="로그인을 해야합니다."))
 
 
 # admin /시즌 말 팀 목록 초기화 크롤링
@@ -389,7 +386,7 @@ def teamlist_get():
                        'insta': '',
                        'fb': '',
                        'official': '',
-                       'bbc': 'team_bbc',
+                       'bbc': team_bbc,
                        'namu': ''}
                 db.teams.update_one(doc)
             except:
@@ -397,16 +394,6 @@ def teamlist_get():
     return jsonify({'msg': '팀목록 새로고침 완료'})
 
 
-
-@app.route('/update_like', methods=['POST'])
-def update_like():
-    token_receive = request.cookies.get('mytoken')
-    try:
-        payload = jwt.decode(token_receive, SECRET_KEY, algorithms=['HS256'])
-        # 좋아요 수 변경
-        return jsonify({"result": "success", 'msg': 'updated'})
-    except (jwt.ExpiredSignatureError, jwt.exceptions.DecodeError):
-        return redirect(url_for("home"))
 
 
 if __name__ == '__main__':

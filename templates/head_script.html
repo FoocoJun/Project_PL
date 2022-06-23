@@ -102,9 +102,10 @@
             success: function (response) {
                 alert(response["msg"])
                 show_notice();
+                $('#article').val('')
+
             }
         });
-        $('#article').empty()
     }
 
     // 게시글 좋아요
