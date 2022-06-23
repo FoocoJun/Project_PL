@@ -71,10 +71,11 @@
     }
 
     function show_news() {
-        let news_dict = {{ news_dict|safe }}
-            console.log(news_dict)
+        let news_dict = {{ news_dict|safe }};
+        let teambbc = '{{ teambbc|safe }}';
+
         for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
-            console.log(i)
+            console.log(i);
             {# 제목 #}
             console.log(news_dict[i][0]);
             {# 시간 #}
@@ -98,14 +99,14 @@
                                 <div class="card-body">
                                     <h3 class="card-title">${news_dict[i][0]}</h3>
                                     <br><br>
-                                    <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
                                     <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     </div>`
-                    $('#news-list-1').append(temp_html)
+                    $('#news-list-2').append(temp_html)
                 } else {
                     console.log('정상 기사입니다.')
                     temp_html = `
@@ -115,13 +116,13 @@
                                 <h3 class="card-title">${news_dict[i][0]}</h3>
                                 <p class="card-text">${news_dict[i][2]}</p>
                                 <br><br>
-                                <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
                                 <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                             </div>
                         </div>
                     </div>
                 `
-                    $('#news-list-1').append(temp_html)
+                    $('#news-list-2').append(temp_html)
                 }
 
             } else {
@@ -138,14 +139,14 @@
                                 <div class="card-body">
                                     <h3 class="card-title">${news_dict[i][0]}</h3>
                                     <br><br>
-                                    <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
                                     <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                                 </div>
                             </div>
                         </div>
                     </div>
                     </div>`
-                    $('#news-list-2').append(temp_html)
+                    $('#news-list-1').append(temp_html)
                 } else {
                     console.log('정상 기사입니다.')
                     temp_html = `
@@ -155,20 +156,16 @@
                                 <h3 class="card-title">${news_dict[i][0]}</h3>
                                 <p class="card-text">${news_dict[i][2]}</p>
                                 <br><br>
-                                <a href="#" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
                                 <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                             </div>
                         </div>
                     </div>
                 `
-                    $('#news-list-2').append(temp_html)
+                    $('#news-list-1').append(temp_html)
                 }
             }
-
-
         }
-
-
     }
 
     // 게시글 쓰기 #article
