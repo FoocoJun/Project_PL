@@ -37,25 +37,34 @@
                         let username = rows[i]['username']
 
                         let temp_html =
-                            `
-                        <div class="mycards col-md-6" id="comment-list">
-                        <h5>사용자명: ${username}</h5>
-                            <div class="card">
-                                <div class="card-body">
-                                    <blockquote class="blockquote mb-0">
-                                        <h3 class="article">${article}</h3>
-                                        <br>
-                                            <footer class="blockquote-footer">${date}</footer>
-                                    </blockquote>
+
+                            `<div class="mycards col-md-12" id="comment-list">
+                                <h5>사용자명: ${username}</h5>
+
+
+                                <div class="card">
+                                    <div class="card-body">
+                                        <div>
+                                            <div class="vote"
+                                                 style="text-align: center; width: 30px; display: inline-block; margin: auto 0;">
+                                                <button onClick="like_article(${number})" type="button">
+                                                    ∧
+                                                </button>
+                                                <div class="likes" style="width: 30px;">${like}</div>
+                                                <button onClick="dislike_article(${number})" type="button">
+                                                    ∨
+                                                </button>
+                                            </div>
+                                            <blockquote class="blockquote mb-0"
+                                                        style="width:85%; padding-left:20px; display: inline-block">
+                                                <h3 class="article">${article}</h3>
+                                                <br>
+                                                    <footer class="blockquote-footer article-date">${date}</footer>
+                                            </blockquote>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                            <p>글번호 : ${number} </p>
-                        <p>인기도 : ${like}</p>
-                        <button onClick="like_article(${number})" type="button">좋아요
-                        </button>
-                        <button onClick="dislike_article(${number})" type="button">싫어요
-                        </button>
-                        </div>`
+                                <p>글번호 : ${number} </p>`
 
 
                         $('#article-list').append(temp_html)
@@ -75,19 +84,18 @@
         let teambbc = '{{ teambbc|safe }}';
 
         for (i = 1; i < Object.keys(news_dict).length + 1; i++) {
-            console.log(i);
+            {#console.log(i);#}
             {# 제목 #}
-            console.log(news_dict[i][0]);
+            {#console.log(news_dict[i][0]);#}
             {# 시간 #}
-            console.log(news_dict[i][1]);
+            {#console.log(news_dict[i][1]);#}
             {# 기사 #}
-            console.log(news_dict[i][2]);
+            {#console.log(news_dict[i][2]);#}
             {#기사 내용이 없으면 넘기기#}
             if (news_dict[i].length == 2) {
                 continue
             } else if (i % 2 == 0) {
                 if (news_dict[i][2].startsWith('https')) {
-                    console.log('이미지 기사입니다.')
                     temp_html = `
                     <div class="news-box">
                     <div class="card" style="max-width: 540px; ">
@@ -99,7 +107,7 @@
                                 <div class="card-body">
                                     <h3 class="card-title">${news_dict[i][0]}</h3>
                                     <br><br>
-                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For More In BBC</a><br><br>
                                     <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                                 </div>
                             </div>
@@ -108,7 +116,6 @@
                     </div>`
                     $('#news-list-2').append(temp_html)
                 } else {
-                    console.log('정상 기사입니다.')
                     temp_html = `
                     <div class="news-box">
                         <div class="card">
@@ -116,7 +123,7 @@
                                 <h3 class="card-title">${news_dict[i][0]}</h3>
                                 <p class="card-text">${news_dict[i][2]}</p>
                                 <br><br>
-                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For More In BBC</a><br><br>
                                 <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                             </div>
                         </div>
@@ -127,7 +134,6 @@
 
             } else {
                 if (news_dict[i][2].startsWith('https')) {
-                    console.log('이미지 기사입니다.')
                     temp_html = `
                     <div class="news-box">
                     <div class="card" style="max-width: 540px; ">
@@ -139,7 +145,7 @@
                                 <div class="card-body">
                                     <h3 class="card-title">${news_dict[i][0]}</h3>
                                     <br><br>
-                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                    <a href="${teambbc}" target="_blank" class="btn main-btn">For More In BBC</a><br><br>
                                     <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                                 </div>
                             </div>
@@ -148,7 +154,6 @@
                     </div>`
                     $('#news-list-1').append(temp_html)
                 } else {
-                    console.log('정상 기사입니다.')
                     temp_html = `
                     <div class="news-box">
                         <div class="card">
@@ -156,7 +161,7 @@
                                 <h3 class="card-title">${news_dict[i][0]}</h3>
                                 <p class="card-text">${news_dict[i][2]}</p>
                                 <br><br>
-                                <a href="${teambbc}" target="_blank" class="btn main-btn">For Mor In BBC</a><br><br>
+                                <a href="${teambbc}" target="_blank" class="btn main-btn">For More In BBC</a><br><br>
                                 <p class="card-text"><small class="text-muted">${news_dict[i][1]}</small></p>
                             </div>
                         </div>
@@ -195,7 +200,7 @@
             url: "/team/write/likes",
             data: {number_give: num},
             success: function (response) {
-                alert(response["msg"])
+
                 show_notice();
 
             }
@@ -209,7 +214,7 @@
             url: "/team/write/dislikes",
             data: {number_give: num},
             success: function (response) {
-                alert(response["msg"])
+
                 show_notice();
 
             }
@@ -219,7 +224,7 @@
     //ajax 양식
     // function select_team(num)
 
-    //     $.ajax({
+    // $.ajax({
     //         type: "POST",
     //         url: "/",
     //         data: {number_give: num},

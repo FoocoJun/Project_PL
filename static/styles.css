@@ -87,6 +87,17 @@ a {
     width: 70%;
     margin: 0 auto;
 }
+.modal-content {
+    width: 40%;
+}
+.profile-btn {
+    display: inline;
+    margin: 0 auto;
+    width: 50%;
+}
+.profile-img {
+    margin: 0 auto;
+}
 
 
 
@@ -314,6 +325,9 @@ p {
     #main-title {
         padding-top: 25%;
     }
+    .hero-body {
+        padding-top: 25%;
+    }
 
     .login-card {
         padding: 15% 0;
@@ -348,4 +362,14 @@ p {
         position: static;
 
     }
+    .article {
+    color: black;
+    font-size: 1rem;
+    margin: auto 0;
+}
+    .article-date {
+        display: none;
+    }
+
+
 }

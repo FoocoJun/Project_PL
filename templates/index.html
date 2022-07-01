@@ -13,7 +13,48 @@
         $(document).ready(function () {
             load_list()
         });
-        {% include 'linkbar_script.html' %}
+
+        function load_list() {
+            $('#link-bar').empty()
+            let all_teams = {{ all_teams|safe }};
+            console.log(all_teams)
+            for (i = 0; i < all_teams.length; i++) {
+                let link_team_name = all_teams[i]['name']
+                let link_team_logo = all_teams[i]['logo']
+                console.log(link_team_name)
+                console.log(link_team_logo)
+
+                if (i >= 0 && i < 5) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_0').append(temp_html)
+
+                } else if (i >= 5 && i < 10) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_1').append(temp_html)
+
+                } else if (i >= 15 && i < 20) {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_2').append(temp_html)
+                } else {
+                    temp_html =
+                        `<a href="/team/${link_team_name}">
+                                <img class="main-team-img" src="${link_team_logo}" alt="${link_team_name}">
+                            </a>`
+                    $('#carousel_3').append(temp_html)
+                }
+
+
+            }
+        }
 
     </script>
 
@@ -26,20 +67,52 @@
 
 <div class="row main-intro">
     <h1 class="myName">{{ user_info.username }}</h1><br>
-    <div class="col-md-4 nameBox">
-        <p align="center">
-            <a class="image is-128x128" href="/user/{{ user_info.username }}">
-                <img class="is-rounded"
-                     src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
-                <button>프로필 관리</button>
-            </a>
-        </p>
+    <div>
+        <a class="profile-img image is-128x128" href="/user/{{ user_info.username }}">
+            <img class="is-rounded"
+                 src="{{ url_for("static", filename=user_info.profile_pic_real) }}">
+            <br>
+            <div style="margin: 0 auto; text-align: center">
+                <button class="btn btn-secondary" style="margin: 3% auto;">프로필 관리</button>
+            </div>
+        </a>
     </div>
+    <br>
+
 
 </div>
 
+<section id="link-box">
+    <div id="carouselExampleControls" class="carousel carousel-dark slide" data-bs-ride="carousel">
+        <div class="carousel-inner">
+            <div class="carousel-item active" id="carousel_0">
 
-{% include 'linkbar.html' %}
+            </div>
+            <div class="carousel-item" id="carousel_1">
+
+            </div>
+            <div class="carousel-item" id="carousel_2">
+
+            </div>
+            <div class="carousel-item" id="carousel_3">
+
+            </div>
+
+        </div>
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleControls"
+                data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+
+</section>
 
 
 </body>
